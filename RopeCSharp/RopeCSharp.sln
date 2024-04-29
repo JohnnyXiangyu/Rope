@@ -5,6 +5,10 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RopeCSharp", "RopeCSharp\RopeCSharp.csproj", "{DB58F4C6-2B78-44F1-836D-6922C5E30C1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstPlayable.Abstractions", "FirstPlayable.Abstractions\FirstPlayable.Abstractions.csproj", "{4AA28F9F-0F63-4BE0-B624-F932554E9B5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstPlayable", "FirstPlayable\FirstPlayable.csproj", "{A3F94514-2A23-45DC-B97D-3EDE2FBBA3A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{DB58F4C6-2B78-44F1-836D-6922C5E30C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB58F4C6-2B78-44F1-836D-6922C5E30C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB58F4C6-2B78-44F1-836D-6922C5E30C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AA28F9F-0F63-4BE0-B624-F932554E9B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AA28F9F-0F63-4BE0-B624-F932554E9B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AA28F9F-0F63-4BE0-B624-F932554E9B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AA28F9F-0F63-4BE0-B624-F932554E9B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F94514-2A23-45DC-B97D-3EDE2FBBA3A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F94514-2A23-45DC-B97D-3EDE2FBBA3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F94514-2A23-45DC-B97D-3EDE2FBBA3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F94514-2A23-45DC-B97D-3EDE2FBBA3A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

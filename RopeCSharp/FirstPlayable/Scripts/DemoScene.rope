@@ -1,0 +1,5 @@
+use context IContext
+
+Dialogue - Person1 | Hello world
+Dialogue - Pseron2 | Owo
+Dialogue - Person3| this is the last line.
