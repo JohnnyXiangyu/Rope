@@ -28,15 +28,38 @@ internal class Script
         // namespace
         serializationContext.AppendLine($"namespace {Namespace};");
 
-        // class
-        using IDisposable classScope = serializationContext.StartScope($"public class {Name}({Context} context)");
+        // script as class
+        using Scope classScope = serializationContext.StartScope($"public class {Name}({Context} context)");
+
+        // state management
+        using (Scope enumScope = serializationContext.StartScope("public enum States"))
+        {
+            foreach (Node node in Nodes)
+            {
+                serializationContext.AppendLine($"{node.Name},");
+            }
+            serializationContext.AppendLine("Terminate");
+        }
+
+        serializationContext.AppendLine($"public States NextState {{ get; private set; }} = States.{Nodes[0].Name};");
+
+        // nodes as methods
         foreach (Node node in Nodes)
         {
             node.Serialize(serializationContext);
         }
 
         // entry method
-        using IDisposable runMethodScope = serializationContext.StartScope("public void Run()");
-        serializationContext.AppendLine($"{Nodes.First().Name}();");
+        using Scope runMethodScope = serializationContext.StartScope("public void Run()");
+        using Scope whileLoopScope = serializationContext.StartScope("while (true)");
+        using Scope switchStateScope = serializationContext.StartScope("switch (NextState)");
+        foreach (Node node in Nodes)
+        {
+            using Scope caseScope = serializationContext.StartScope($"case States.{node.Name}:");
+            serializationContext.AppendLine($"{node.Name}();");
+            serializationContext.AppendLine("break;");
+        }
+        using Scope terminateCaseScope = serializationContext.StartScope($"case States.Terminate:");
+        serializationContext.AppendLine($"return;");
     }
 }
