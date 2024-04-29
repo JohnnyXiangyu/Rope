@@ -7,7 +7,7 @@ internal class Program
         Console.WriteLine("First playable loaded.");
 
         FirstPlayableContext context = new();
-        RopeCSharp.Client.Scripts.DemoScene demoScene = new(context);
+        Scripts.DemoScene demoScene = new(context);
         demoScene.Run();
     }
 }

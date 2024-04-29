@@ -5,7 +5,7 @@ internal class FirstPlayableContext : IContext
 {
     void IContext.Dialogue(string name, string line, string verb)
     {
-        Console.WriteLine($"{name} {verb}, \"{line}\"");
+        Console.Write($"{name} {verb}, \"{line}\"");
         Console.ReadLine();
     }
 }

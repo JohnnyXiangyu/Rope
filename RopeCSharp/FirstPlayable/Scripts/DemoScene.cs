@@ -1,11 +1,15 @@
 using FirstPlayable.Abstractions;
-namespace RopeCSharp.Client.Scripts;
+namespace FirstPlayable.Scripts;
 public class DemoScene(IContext context)
 {
-public void Run()
-{
-context.Dialogue("Person1", "Hello world");
-context.Dialogue("Pseron2", "Owo");
-context.Dialogue("Person3", "this is the last line.");
-}
+    public void MainNode()
+    {
+        context.Dialogue("Person 1", "Hello");
+        context.Dialogue("Person 2", "OwO");
+        context.Dialogue("Person 3", "This is the end of the scrip", "YELLS");
+    }
+    public void Run()
+    {
+        MainNode();
+    }
 }

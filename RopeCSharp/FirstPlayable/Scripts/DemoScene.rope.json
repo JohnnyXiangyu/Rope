@@ -1,0 +1,34 @@
+{
+  "Context": "IContext",
+  "Namespace": "FirstPlayable.Scripts",
+  "Name": "DemoScene",
+  "Nodes": [
+    {
+      "Name": "MainNode",
+      "Actions": [
+        {
+          "Action": "Dialogue",
+          "Values": [
+            "Person 1",
+            "Hello"
+          ]
+        },
+        {
+          "Action": "Dialogue",
+          "Values": [
+            "Person 2",
+            "OwO"
+          ]
+        },
+        {
+          "Action": "Dialogue",
+          "Values": [
+            "Person 3",
+            "This is the end of the scrip",
+            "YELLS"
+          ]
+        }
+      ]
+    }
+  ]
+}
