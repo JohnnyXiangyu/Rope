@@ -19,7 +19,7 @@ internal class ScriptAction
                 builder.Append(", ");
             }
             first = false;
-            builder.Append($"\"{value}\"");
+            builder.Append($"{value}");
         }
         builder.Append(");");
         context.AppendLine(builder.ToString());

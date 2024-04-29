@@ -9,23 +9,30 @@
         {
           "Action": "Dialogue",
           "Values": [
-            "Person 1",
-            "Hello"
+            "\"Person 1\"",
+            "\"Hello\""
           ]
         },
         {
           "Action": "Dialogue",
           "Values": [
-            "Person 2",
-            "OwO"
+            "\"Person 2\"",
+            "\"OwO\""
           ]
         },
         {
           "Action": "Dialogue",
           "Values": [
-            "Person 3",
-            "This is the end of the scrip",
-            "YELLS"
+            "\"Person 3\"",
+            "\"This is the end of the scrip\"",
+            "\"YELLS\""
+          ]
+        },
+        {
+          "Action": "GetPoints",
+          "Values": [
+            "3",
+            "\"completing the first playable\""
           ]
         }
       ]
