@@ -8,6 +8,9 @@ internal class Program
 
         FirstPlayableContext context = new();
         Scripts.DemoScene demoScene = new(context);
-        demoScene.Run();
+        foreach (object? _ in demoScene.Run())
+        {
+            Console.ReadLine();
+        }
     }
 }

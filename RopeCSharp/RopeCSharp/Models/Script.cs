@@ -24,6 +24,7 @@ internal class Script
             throw new Exception($"invalid context type {Context}");
         }
         serializationContext.AppendLine($"using {contextType.Namespace};");
+        serializationContext.AppendLine("using System.Collections;");
 
         // namespace
         serializationContext.AppendLine($"namespace {Namespace};");
@@ -49,17 +50,22 @@ internal class Script
             node.Serialize(serializationContext);
         }
 
-        // entry method
-        using Scope runMethodScope = serializationContext.StartScope("public void Run()");
+        // run method
+        using Scope runMethodScope = serializationContext.StartScope("public IEnumerable Run()");
         using Scope whileLoopScope = serializationContext.StartScope("while (true)");
+        using (Scope ifScope = serializationContext.StartScope("if (NextState == States.Terminate)"))
+        {
+            serializationContext.AppendLine("break;");
+        }
         using Scope switchStateScope = serializationContext.StartScope("switch (NextState)");
         foreach (Node node in Nodes)
         {
             using Scope caseScope = serializationContext.StartScope($"case States.{node.Name}:");
-            serializationContext.AppendLine($"{node.Name}();");
+            using (Scope foreachScope = serializationContext.StartScope($"foreach (object? _ in {node.Name}())"))
+            {
+                serializationContext.AppendLine("yield return null;");
+            }
             serializationContext.AppendLine("break;");
         }
-        using Scope terminateCaseScope = serializationContext.StartScope($"case States.Terminate:");
-        serializationContext.AppendLine($"return;");
     }
 }

@@ -10,12 +10,13 @@ internal record Node
     public void Serialize(SerializationContext context)
     {
         // process the initial lines of a file
-        using Scope methodScope = context.StartScope($"public void {Name}()");
+        using Scope methodScope = context.StartScope($"public IEnumerable {Name}()");
 
         // process each action
         foreach (ScriptAction action in Actions)
         {
             action.Serialize(context);
+            context.AppendLine("yield return null;");
         }
 
         // at the end of a node is its transition
