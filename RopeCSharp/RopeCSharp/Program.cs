@@ -1,4 +1,5 @@
-﻿using RopeCSharp.Models;
+﻿using Rope.Abstractions.Models;
+using RopeCSharp.Extensions;
 using RopeCSharp.Serialization;
 using System.Reflection;
 
@@ -6,7 +7,7 @@ namespace RopeCSharp;
 
 internal partial class Program
 {
-    static async Task Main(string[] _)
+    static async Task MainAsync(string[] _)
     {
         const string ScriptPath = "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\Scripts";
 

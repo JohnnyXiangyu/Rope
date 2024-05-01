@@ -1,14 +1,10 @@
 ﻿using RopeCSharp.Serialization;
 using System.Text.Json;
+using Rope.Abstractions.Models;
 
-namespace RopeCSharp.Models;
-internal class Script
+namespace RopeCSharp.Extensions;
+internal static class ScriptExtensions
 {
-    public required string Context { get; set; }
-    public required string Namespace { get; set; }
-    public required List<Node> Nodes { get; set; }
-    public required string Name { get; set; }
-
     public static async Task<Script> DeserializeAsync(string path)
     {
         using FileStream scriptFile = File.OpenRead(path);
@@ -16,36 +12,36 @@ internal class Script
         return script;
     }
 
-    public void Serialize(SerializationContext serializationContext)
+    public static void Serialize(this Script self, SerializationContext serializationContext)
     {
         // using
-        if (!serializationContext.ContextTypes.TryGetValue(Context, out Type? contextType))
+        if (!serializationContext.ContextTypes.TryGetValue(self.Context, out Type? contextType))
         {
-            throw new Exception($"invalid context type {Context}");
+            throw new Exception($"invalid context type {self.Context}");
         }
         serializationContext.AppendLine($"using {contextType.Namespace};");
         serializationContext.AppendLine("using System.Collections;");
 
         // namespace
-        serializationContext.AppendLine($"namespace {Namespace};");
+        serializationContext.AppendLine($"namespace {self.Namespace};");
 
         // script as class
-        using Scope classScope = serializationContext.StartScope($"public class {Name}({Context} context)");
+        using Scope classScope = serializationContext.StartScope($"public class {self.Name}({self.Context} context)");
 
         // state management
         using (Scope enumScope = serializationContext.StartScope("public enum States"))
         {
-            foreach (Node node in Nodes)
+            foreach (Node node in self.Nodes)
             {
                 serializationContext.AppendLine($"{node.Name},");
             }
             serializationContext.AppendLine("Terminate");
         }
 
-        serializationContext.AppendLine($"public States NextState {{ get; private set; }} = States.{Nodes[0].Name};");
+        serializationContext.AppendLine($"public States NextState {{ get; private set; }} = States.{self.Nodes[0].Name};");
 
         // nodes as methods
-        foreach (Node node in Nodes)
+        foreach (Node node in self.Nodes)
         {
             node.Serialize(serializationContext);
         }
@@ -58,7 +54,7 @@ internal class Script
             serializationContext.AppendLine("break;");
         }
         using Scope switchStateScope = serializationContext.StartScope("switch (NextState)");
-        foreach (Node node in Nodes)
+        foreach (Node node in self.Nodes)
         {
             using Scope caseScope = serializationContext.StartScope($"case States.{node.Name}:");
             using (Scope foreachScope = serializationContext.StartScope($"foreach (object? _ in {node.Name}())"))

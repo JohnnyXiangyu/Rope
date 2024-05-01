@@ -1,0 +1,10 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://5rkt3vdodo75"]
+
+[ext_resource type="FontFile" uid="uid://bsp5p32t6vlqe" path="res://Fonts/CONSOLA.TTF" id="1_h5j3n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mo86j"]
+bg_color = Color(0.25098, 0.278431, 0.329412, 1)
+
+[resource]
+Button/fonts/font = ExtResource("1_h5j3n")
+Button/styles/normal = SubResource("StyleBoxFlat_mo86j")

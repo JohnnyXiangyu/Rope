@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmj7i3b073liq"]
+
+[ext_resource type="PackedScene" uid="uid://pkk6r6lhoknm" path="res://UI/EditorLayout.tscn" id="1_qsjl8"]
+
+[node name="Main Scene" type="Node2D"]
+
+[node name="MarginContainer" parent="." instance=ExtResource("1_qsjl8")]

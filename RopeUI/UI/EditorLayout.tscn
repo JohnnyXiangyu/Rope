@@ -1,0 +1,100 @@
+[gd_scene load_steps=6 format=3 uid="uid://qvwhlesx07wn"]
+
+[ext_resource type="Script" path="res://Scripts/UserInterface/EditorLayout.cs" id="1_j01yi"]
+[ext_resource type="Script" path="res://Scripts/UserInterface/NewNodeButton.cs" id="2_mnint"]
+[ext_resource type="Script" path="res://Scripts/UserInterface/MainGraphEditor.cs" id="3_w71ix"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ishom"]
+bg_color = Color(0.156863, 0.172549, 0.203922, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bi5um"]
+
+[node name="EditorLayout" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_j01yi")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MenuBarPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ishom")
+
+[node name="MenuBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MenuBarPanel"]
+layout_mode = 2
+
+[node name="OpenAssemblyButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "OPEN ASSEMBLY
+"
+
+[node name="OpenFolderButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "OPEN FOLDER"
+
+[node name="NewNodeButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "NEW NODE"
+script = ExtResource("2_mnint")
+
+[node name="NewScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "NEW SCRIPT"
+
+[node name="MainPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel"]
+layout_mode = 2
+
+[node name="SplitLeft" type="HSplitContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft"]
+layout_mode = 2
+
+[node name="SolutionView" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/PanelContainer/SolutionView"]
+layout_mode = 2
+text = "SOLUTION EXPLORER"
+label_settings = SubResource("LabelSettings_bi5um")
+horizontal_alignment = 1
+
+[node name="SplitRight" type="HSplitContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight"]
+layout_mode = 2
+size_flags_horizontal = 3
+scroll_offset = Vector2(-33, -27)
+script = ExtResource("3_w71ix")
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "PROPERTY EDITOR"
+horizontal_alignment = 1

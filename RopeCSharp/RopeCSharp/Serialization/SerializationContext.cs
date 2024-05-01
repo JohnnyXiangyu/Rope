@@ -1,7 +1,7 @@
 ﻿using System.Text;
 
 namespace RopeCSharp.Serialization;
-internal class SerializationContext(Dictionary<string, Type> contextTypes, int indentation = 4)
+public class SerializationContext(Dictionary<string, Type> contextTypes, int indentation = 4)
 {
     private int _depth = 0;
     private readonly StringBuilder _builder = new();

@@ -1,18 +1,16 @@
 ﻿using RopeCSharp.Serialization;
 using System.Text;
+using Rope.Abstractions.Models;
 
-namespace RopeCSharp.Models;
-internal class ScriptAction
+namespace RopeCSharp.Extensions;
+internal static class ScriptActionExtensions
 {
-    public required string Action {  get; set; }
-    public required List<string> Values { get; set; }
-
-    public void Serialize(SerializationContext context)
+    public static void Serialize(this ScriptAction self, SerializationContext context)
     {
         StringBuilder builder = new();
-        builder.Append($"context.{Action}(");
+        builder.Append($"context.{self.Action}(");
         bool first = true;
-        foreach (string value in Values)
+        foreach (Value value in self.Values)
         {
             if (!first)
             {

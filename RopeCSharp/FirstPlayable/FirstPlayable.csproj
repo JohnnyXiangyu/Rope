@@ -11,4 +11,8 @@
     <ProjectReference Include="..\FirstPlayable.Abstractions\FirstPlayable.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
 </Project>

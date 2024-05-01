@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cesqjku2qfow8"]
+
+[node name="ActionListGraphNode" type="GraphNode"]
+offset_right = 169.0
+offset_bottom = 126.0
