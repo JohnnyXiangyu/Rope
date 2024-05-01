@@ -28,24 +28,33 @@ public class Service
         
         // parse context type and actions
         IEnumerable<Type> contextTypes = assembly.GetTypes().Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ContextTypeAttribute)));
-        ContextType[] contextTypesRef = contextTypes.Select(type =>
+        ContextType[] contextTypesRef = contextTypes.Select(contextType =>
         {
-            var methods = type.GetMethods()
+            var methods = contextType.GetMethods()
                 .Where(method => method.CustomAttributes
                 .Any(attr => attr.AttributeType == typeof(ContextActionAttribute)))
                 .Where(method => !method.IsStatic);
 
-            ContextAction[] actions = methods.Select(method =>
+            ContextAction[] actions = methods.Select(contextMethod =>
             {
-                ParameterInfo[] parameters = method.GetParameters();
-                DataConstructor[] values = parameters.Select(param =>
+                ParameterInfo[] parameters = contextMethod.GetParameters();
+                DataConstructor[] values = parameters.Select(methodParameter =>
                 {
-                    if (allowedLiteralTypes.Contains(param.ParameterType.Name))
+                    if (allowedLiteralTypes.Contains(methodParameter.ParameterType.Name))
                     {
-                        LiteralType literal = GetLiteralType(param.ParameterType);
-                        return new DataConstructor() { Name = param.ParameterType.Name, Params = [literal] };
+                        LiteralType literal = GetLiteralType(methodParameter.ParameterType);
+                        return new DataConstructor() 
+                        { 
+                            Name = methodParameter.ParameterType.Name, 
+                            IsArray = false,
+                            Params = [literal] 
+                        };
                     }
-                    else if (typeDict.TryGetValue(param.ParameterType.Name, out DataConstructor? ctype))
+                    else if (methodParameter.ParameterType.IsArray)
+                    {
+                        return GetArrayType(methodParameter.ParameterType);
+                    }
+                    else if (typeDict.TryGetValue(methodParameter.ParameterType.Name, out DataConstructor? ctype))
                     {
                         return ctype;
                     }
@@ -56,10 +65,10 @@ public class Service
                     
                 }).ToArray();
 
-                return new ContextAction() { Name = method.Name, Params = values };
+                return new ContextAction() { Name = contextMethod.Name, Params = values };
             }).ToArray();
 
-            return new ContextType() { Name = type.Name, ModuleReq = type.Namespace, Actions = actions };
+            return new ContextType() { Name = contextType.Name, ModuleReq = contextType.Namespace, Actions = actions };
         }).ToArray();
 
         Dictionary<string, ContextType> contextDict = [];
@@ -71,7 +80,7 @@ public class Service
         return new DataBase() { ContextTypes = contextDict, Constructors = typeDict };
     }
 
-    private static LiteralType GetLiteralType(Type type)
+    private static LiteralType GetLiteralType(Type? type)
     {
         if (type == typeof(string))
         {
@@ -99,7 +108,7 @@ public class Service
         }
         else
         {
-            throw new ArgumentException();
+            throw new UnsupportedTypeException();
         }
     }
 
@@ -120,9 +129,21 @@ public class Service
         DataConstructor valueType = new()
         {
             Name = type.Name,
+            IsArray = false,
             Params = literalParams
         };
 
         return valueType;
+    }
+
+    private static DataConstructor GetArrayType(Type type)
+    {
+        LiteralType baseType = GetLiteralType(type.GetElementType());
+        return new DataConstructor()
+        {
+            Name = type.Name,
+            Params = [baseType],
+            IsArray = true
+        };
     }
 }

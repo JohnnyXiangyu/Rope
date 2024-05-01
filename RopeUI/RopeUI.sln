@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RopeUI", "RopeUI.csproj", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RopeCSharp", "..\RopeCSharp\RopeCSharp\RopeCSharp.csproj", "{93DFD124-FD51-4CD1-A254-E5C80B27C430}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rope.Abstractions", "..\Rope.Abstractions\Rope.Abstractions\Rope.Abstractions.csproj", "{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,8 +33,19 @@ Global
 		{93DFD124-FD51-4CD1-A254-E5C80B27C430}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
 		{93DFD124-FD51-4CD1-A254-E5C80B27C430}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93DFD124-FD51-4CD1-A254-E5C80B27C430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397AED28-48CF-4CF8-B55F-2FBE79AECA8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8922A432-4E88-4DA1-8D91-92A3869EE746}
 	EndGlobalSection
 EndGlobal

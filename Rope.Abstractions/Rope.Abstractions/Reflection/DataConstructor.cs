@@ -13,5 +13,6 @@ public enum LiteralType
 public record DataConstructor
 {
     public required string Name { get; set; }
+    public required bool IsArray { get; set; }
     public required LiteralType[] Params { get; set; }
 }

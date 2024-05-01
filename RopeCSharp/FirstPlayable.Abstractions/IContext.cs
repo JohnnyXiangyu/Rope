@@ -12,4 +12,6 @@ public interface IContext
     void Dialogue(string name, string line, string verb = "says");
     [ContextAction]
     void GetPoints(int numPoints, string reason);
+    [ContextAction]
+    void Branch(params string[] choices);
 }
