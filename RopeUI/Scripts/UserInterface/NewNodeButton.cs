@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace RopeUI.Scripts.UserInterface;
 
@@ -18,6 +17,5 @@ public partial class NewNodeButton : Button
         GraphEdit graphBody = GetNode<GraphEdit>("../../FuncitonalDocks/GraphEdit");
         newNode.Instantiate();
         graphBody.AddChild(newNode.Instantiate());
-        
     }
 }

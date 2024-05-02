@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://v4ic45k211q"]
+
+[ext_resource type="Script" path="res://Scripts/Dialogues/NewNodePopup.cs" id="1_6i5lj"]
+
+[node name="NewNodePopup" type="PopupPanel"]
+title = "Hello??"
+initial_position = 1
+size = Vector2i(470, 90)
+visible = true
+script = ExtResource("1_6i5lj")
+ButtonPath = NodePath("Control/VBoxContainer/Button")
+InputBoxPath = NodePath("Control/VBoxContainer/TextEdit")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 466.0
+offset_bottom = 86.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+placeholder_text = "NODE NAME HERE"
+scroll_smooth = true
+
+[node name="Button" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "CONFIRM"
+
+[connection signal="popup_hide" from="." to="." method="OnCancel"]
+[connection signal="button_down" from="Control/VBoxContainer/Button" to="." method="OnConfirm"]

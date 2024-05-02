@@ -42,9 +42,9 @@ layout_mode = 2
 text = "OPEN ASSEMBLY
 "
 
-[node name="OpenFolderButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+[node name="OpenScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
 layout_mode = 2
-text = "OPEN FOLDER"
+text = "OPEN SCRIPT"
 
 [node name="NewNodeButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
 layout_mode = 2
@@ -74,7 +74,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/PanelContainer/SolutionView"]
 layout_mode = 2
-text = "SOLUTION EXPLORER"
+text = "TOOLBOX"
 label_settings = SubResource("LabelSettings_bi5um")
 horizontal_alignment = 1
 
@@ -85,7 +85,7 @@ theme_override_constants/separation = 0
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight"]
 layout_mode = 2
 size_flags_horizontal = 3
-scroll_offset = Vector2(-33, -27)
+scroll_offset = Vector2(-13, 0)
 script = ExtResource("3_w71ix")
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitLeft/SplitRight"]
