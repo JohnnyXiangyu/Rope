@@ -4,7 +4,7 @@ using RopeCSharp.Serialization;
 namespace RopeCSharp.Extensions;
 internal static class NodeExtensions
 {
-    public static void Serialize(this Node self, SerializationContext context)
+    public static void Serialize(this ScriptNode self, SerializationContext context)
     {
         // process the initial lines of a file
         using Scope methodScope = context.StartScope($"public IEnumerable {self.Name}()");
@@ -20,7 +20,7 @@ internal static class NodeExtensions
         self.EncodeTransition(context);
     }
 
-    private static void EncodeTransition(this Node self, SerializationContext context)
+    private static void EncodeTransition(this ScriptNode self, SerializationContext context)
     {
         // missing transition means terminate
         if (self.Transition == null)
@@ -30,7 +30,7 @@ internal static class NodeExtensions
         }
 
         using Scope switchScope = context.StartScope($"switch (context.{self.Transition.Condition})");
-        for (int i = 0; i < self.Transition.Branches.Length; i++)
+        for (int i = 0; i < self.Transition.Branches.Count; i++)
         {
             using Scope caseScope = context.StartScope($"case {i}:");
             context.AppendLine($"NextState = States.{self.Transition.Branches[i]};");

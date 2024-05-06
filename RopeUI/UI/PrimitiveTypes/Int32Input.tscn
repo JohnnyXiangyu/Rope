@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b3sk5cybkfrtb"]
+
+[node name="StringInput" type="LineEdit"]
+offset_right = 108.0
+offset_bottom = 37.0
+placeholder_text = "INT32 VALUE"
+expand_to_text_length = true
+caret_blink = true
+caret_blink_interval = 0.5

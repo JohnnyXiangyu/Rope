@@ -10,7 +10,7 @@ public enum LiteralType
     Boolean
 }
 
-public record DataConstructor
+public class DataConstructor
 {
     public required string Name { get; set; }
     public required bool IsArray { get; set; }

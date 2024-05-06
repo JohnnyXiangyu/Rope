@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjk8jhl1h13ey"]
+
+[ext_resource type="Script" path="res://Scripts/UserInterface/PropertyPanel.cs" id="1_3khnn"]
+[ext_resource type="PackedScene" uid="uid://dc71fy2q4aau2" path="res://UI/ActionItemInEditor.tscn" id="2_ksvay"]
+
+[node name="PropertyEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelChild")]
+script = ExtResource("1_3khnn")
+LabelChild = NodePath("Label")
+ActionBoxPack = ExtResource("2_ksvay")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2

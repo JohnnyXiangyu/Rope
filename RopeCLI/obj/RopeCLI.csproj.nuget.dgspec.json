@@ -1,0 +1,336 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Repos\\Rope\\RopeCLI\\RopeCLI.csproj": {}
+  },
+  "projects": {
+    "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj",
+        "projectName": "Rope.Abstractions",
+        "projectPath": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj",
+        "packagesPath": "C:\\Users\\wonjo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wonjo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Repos\\Rope\\RopeCLI\\RopeCLI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Repos\\Rope\\RopeCLI\\RopeCLI.csproj",
+        "projectName": "RopeCLI",
+        "projectPath": "C:\\Repos\\Rope\\RopeCLI\\RopeCLI.csproj",
+        "packagesPath": "C:\\Users\\wonjo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repos\\Rope\\RopeCLI\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wonjo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj"
+              },
+              "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj"
+              },
+              "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\FirstPlayable.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\FirstPlayable.csproj"
+              },
+              "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\RopeCSharp.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\RopeCSharp.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj",
+        "projectName": "FirstPlayable.Abstractions",
+        "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj",
+        "packagesPath": "C:\\Users\\wonjo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wonjo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\FirstPlayable.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\FirstPlayable.csproj",
+        "projectName": "FirstPlayable",
+        "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\FirstPlayable.csproj",
+        "packagesPath": "C:\\Users\\wonjo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wonjo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\RopeCSharp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\RopeCSharp.csproj",
+        "projectName": "RopeCSharp",
+        "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\RopeCSharp.csproj",
+        "packagesPath": "C:\\Users\\wonjo\\.nuget\\packages\\",
+        "outputPath": "C:\\Repos\\Rope\\RopeCSharp\\RopeCSharp\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\wonjo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\Rope.Abstractions\\Rope.Abstractions\\Rope.Abstractions.csproj"
+              },
+              "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj": {
+                "projectPath": "C:\\Repos\\Rope\\RopeCSharp\\FirstPlayable.Abstractions\\FirstPlayable.Abstractions.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

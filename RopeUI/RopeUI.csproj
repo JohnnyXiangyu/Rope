@@ -1,14 +1,17 @@
-<Project Sdk="Godot.NET.Sdk/4.2.2">
+﻿<Project Sdk="Godot.NET.Sdk/4.2.2">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="UI\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rope.Abstractions\Rope.Abstractions\Rope.Abstractions.csproj" />
+    <ProjectReference Include="..\RopeCSharp\FirstPlayable.Abstractions\FirstPlayable.Abstractions.csproj" />
     <ProjectReference Include="..\RopeCSharp\RopeCSharp\RopeCSharp.csproj" />
   </ItemGroup>
 </Project>

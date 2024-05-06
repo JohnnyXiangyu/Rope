@@ -1,0 +1,21 @@
+{
+  "Context": "IContext",
+  "Namespace": "FirstPlayable.Scripts",
+  "Name": "RoutineOne",
+  "Nodes": [
+    {
+      "Name": "Node_1",
+      "PosX": 0,
+      "PosY": 0,
+      "Transition": null,
+      "Actions": []
+    },
+    {
+      "Name": "Node_2",
+      "PosX": 100,
+      "PosY": 100,
+      "Transition": null,
+      "Actions": []
+    }
+  ]
+}

@@ -9,10 +9,12 @@ public class Service
     public static DataBase LoadAssembly(string path)
     {
         Assembly assembly = Assembly.LoadFrom(path);
+        return LoadAssembly(assembly);
+    }
 
+    public static DataBase LoadAssembly(Assembly assembly)
+    {
         // build a set of supported types
-        IEnumerable<Type> valueTypes = assembly.GetTypes().Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ValueTypeAttribute)));
-        Dictionary<string, DataConstructor> typeDict = [];
         HashSet<string> allowedLiteralTypes = [
             typeof(string).Name,
             typeof(int).Name,
@@ -21,61 +23,43 @@ public class Service
             typeof(double).Name,
             typeof(bool).Name
         ];
-        foreach (Type type in valueTypes)
-        {
-            typeDict.Add(type.Name, GetCustomType(type));
-        }
-        
-        // parse context type and actions
-        IEnumerable<Type> contextTypes = assembly.GetTypes().Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ContextTypeAttribute)));
-        ContextType[] contextTypesRef = contextTypes.Select(contextType =>
-        {
-            var methods = contextType.GetMethods()
-                .Where(method => method.CustomAttributes
-                .Any(attr => attr.AttributeType == typeof(ContextActionAttribute)))
-                .Where(method => !method.IsStatic);
+        Dictionary<string, DataConstructor> typeDict = assembly
+            .GetTypes()
+            .Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ValueTypeAttribute)))
+            .Select(t => (t.Name, GetCustomType(t)))
+            .ToDictionary();
 
-            ContextAction[] actions = methods.Select(contextMethod =>
-            {
-                ParameterInfo[] parameters = contextMethod.GetParameters();
-                DataConstructor[] values = parameters.Select(methodParameter =>
+        // construct a dictionary of all context information
+        Dictionary<string, ContextType> contextDict = assembly
+            .GetTypes()
+            .Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ContextTypeAttribute)))
+            .Select(contextType =>
+                new ContextType()
                 {
-                    if (allowedLiteralTypes.Contains(methodParameter.ParameterType.Name))
-                    {
-                        LiteralType literal = GetLiteralType(methodParameter.ParameterType);
-                        return new DataConstructor() 
-                        { 
-                            Name = methodParameter.ParameterType.Name, 
-                            IsArray = false,
-                            Params = [literal] 
-                        };
-                    }
-                    else if (methodParameter.ParameterType.IsArray)
-                    {
-                        return GetArrayType(methodParameter.ParameterType);
-                    }
-                    else if (typeDict.TryGetValue(methodParameter.ParameterType.Name, out DataConstructor? ctype))
-                    {
-                        return ctype;
-                    }
-                    else
-                    {
-                        throw new UnsupportedTypeException();
-                    }
-                    
-                }).ToArray();
-
-                return new ContextAction() { Name = contextMethod.Name, Params = values };
-            }).ToArray();
-
-            return new ContextType() { Name = contextType.Name, ModuleReq = contextType.Namespace, Actions = actions };
-        }).ToArray();
-
-        Dictionary<string, ContextType> contextDict = [];
-        foreach (ContextType context in contextTypesRef)
-        {
-            contextDict.Add(context.Name, context);
-        }
+                    Name = contextType.Name,
+                    ModuleReq = contextType.Namespace,
+                    Actions = contextType
+                    .GetMethods()
+                    .Where(method => method.CustomAttributes
+                    .Any(attr => attr.AttributeType == typeof(ContextActionAttribute)))
+                    .Where(method => !method.IsStatic)
+                    .Select(contextMethod =>
+                        new ContextAction()
+                        {
+                            Name = contextMethod.Name,
+                            Params = contextMethod
+                                .GetParameters()
+                                .Select(methodParameter =>
+                                    new Parameter()
+                                    {
+                                        Name = methodParameter.Name,
+                                        DataConstructor = GetDataConstructorForParam(methodParameter, allowedLiteralTypes, typeDict)
+                                    })
+                                .ToArray()
+                        })
+                    .ToArray()
+                })
+            .Select(context => (context.Name, context)).ToDictionary();
 
         return new DataBase() { ContextTypes = contextDict, Constructors = typeDict };
     }
@@ -145,5 +129,31 @@ public class Service
             Params = [baseType],
             IsArray = true
         };
+    }
+
+    private static DataConstructor GetDataConstructorForParam(ParameterInfo methodParameter, HashSet<string> allowedLiteralTypes, Dictionary<string, DataConstructor> typeDict)
+    {
+        if (allowedLiteralTypes.Contains(methodParameter.ParameterType.Name))
+        {
+            LiteralType literal = GetLiteralType(methodParameter.ParameterType);
+            return new DataConstructor()
+            {
+                Name = methodParameter.ParameterType.Name,
+                IsArray = false,
+                Params = [literal]
+            };
+        }
+        else if (methodParameter.ParameterType.IsArray)
+        {
+            return GetArrayType(methodParameter.ParameterType);
+        }
+        else if (typeDict.TryGetValue(methodParameter.ParameterType.Name, out DataConstructor? ctype))
+        {
+            return ctype;
+        }
+        else
+        {
+            throw new UnsupportedTypeException();
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Rope.Abstractions.Reflection;
 
-public record ContextAction
+public class ContextAction
 {
     public required string Name { get; set; }
-    public required IEnumerable<DataConstructor> Params { get; set; }
+    public required Parameter[] Params { get; set; }
 }

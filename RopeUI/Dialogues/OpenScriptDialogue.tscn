@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyl8jnf8fa73"]
+
+[ext_resource type="Script" path="res://Scripts/Dialogues/OpenFileDialog.cs" id="1_7yvcb"]
+
+[node name="OpenAssemblyDialogue" type="FileDialog"]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 600)
+visible = true
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.rope.json")
+use_native_dialog = true
+script = ExtResource("1_7yvcb")

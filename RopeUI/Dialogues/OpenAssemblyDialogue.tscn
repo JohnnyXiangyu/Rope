@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://byipj0fccmfyj"]
+[gd_scene load_steps=2 format=3 uid="uid://byipj0fccmfyj"]
+
+[ext_resource type="Script" path="res://Scripts/Dialogues/OpenFileDialog.cs" id="1_2ycw2"]
 
 [node name="OpenAssemblyDialogue" type="FileDialog"]
 title = "Open a File"
@@ -10,3 +12,4 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.dll")
 use_native_dialog = true
+script = ExtResource("1_2ycw2")

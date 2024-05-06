@@ -5,31 +5,19 @@ namespace RopeUI.Scripts.Dialogues;
 
 public partial class NewNodePopup : Node
 {
-    public string Input { get; set; }
+    public string Input { get; set; } = string.Empty;
     public Action<string> Callback { get; set; } = _ => { };
 
     [Signal]
-    public delegate void NodeCreationConfirmEventHandler(string nodeName);
+    public delegate void NodeCreationConfirmEventHandler(string nodeName, NewNodePopup popup);
 
     [Export]
-    public NodePath ButtonPath { get; set; }
+    public NodePath? ButtonPath { get; set; }
+    private Button? ButtonChild;
+
     [Export]
-    public NodePath InputBoxPath { get; set; }
-
-    private Button ButtonChild;
-    private TextEdit InputChild;
-
-    public event Action<string> NodeCreation
-    {
-        add
-        {
-            Connect(SignalName.NodeCreationConfirm, Callable.From(value));
-        }
-        remove
-        {
-            Disconnect(SignalName.NodeCreationConfirm, Callable.From(value));
-        }
-    }
+    public NodePath? InputBoxPath { get; set; }
+    private TextEdit? InputChild;
 
     public override void _Ready()
     {
@@ -45,8 +33,9 @@ public partial class NewNodePopup : Node
 
     public void OnConfirm()
     {
-        EmitSignal(SignalName.NodeCreationConfirm, InputChild.Text);
-        GD.Print($"new node name: {InputChild.Text}");
-        QueueFree();
+        if (InputChild!.Text.Length == 0)
+            return;
+
+        EmitSignal(SignalName.NodeCreationConfirm, InputChild!.Text, this);
     }
 }
