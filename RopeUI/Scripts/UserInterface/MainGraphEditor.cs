@@ -45,7 +45,7 @@ public partial class MainGraphEditor : GraphEdit
         ConnectionRequest += ConnectNodeWithRecord;
         NodeSelected += NodeSelectedDispatch;
         NodeDeselected += NodeDeselectedDispatch;
-        Database = Service.LoadAssembly(Assembly.GetAssembly(typeof(IContext)) ?? throw new Exception("unable to load client assembly"));
+        Database = Service.LoadAssembly(Assembly.GetAssembly(AssemblyConfigs.AssemblyEntry) ?? throw new Exception("unable to load client assembly"));
         EmitSignal(SignalName.AnnounceMainEditor, this);
     }
 
