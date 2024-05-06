@@ -45,6 +45,14 @@ text = "OPEN SCRIPT"
 layout_mode = 2
 text = "NEW NODE"
 
+[node name="DebugScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "DEBUG SCRIPT"
+
+[node name="DebugJsonButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "DEBUG JSON"
+
 [node name="MainPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -83,6 +91,8 @@ layout_mode = 2
 
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/OpenScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="InitiateLoadScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewNodeButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNode"]
+[connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/DebugScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="DebugOutputScript"]
+[connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/DebugJsonButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="DebugOutputJson"]
 [connection signal="ActionNodeDeleted" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="CancelDisplay"]
 [connection signal="ActionNodeDeselected" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="CancelDisplay"]
 [connection signal="ActionNodeSelected" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="DisplayActionNode"]

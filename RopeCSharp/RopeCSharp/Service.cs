@@ -1,11 +1,21 @@
 ﻿using Rope.Abstractions.CSharpAttributes;
+using Rope.Abstractions.Models;
 using Rope.Abstractions.Reflection;
 using RopeCSharp.Exceptions;
+using RopeCSharp.Extensions;
+using RopeCSharp.Serialization;
 using System.Reflection;
 
 namespace RopeCSharp;
 public class Service
 {
+    public static string SerializeScript(RopeScript script, Dictionary<string, ContextType> contextTypes)
+    {
+        SerializationContext serializationContext = new(contextTypes);
+        script.Serialize(serializationContext);
+        return serializationContext.ToString();
+    }
+
     public static DataBase LoadAssembly(string path)
     {
         Assembly assembly = Assembly.LoadFrom(path);

@@ -25,14 +25,20 @@ public partial class ActionNode : GraphNode, IDataNodeHolder
     {
         base._Ready();
         Title = ActionName;
-        DataNode ??= new() { Actions = [], Name = ActionName, PosX = Position.X, PosY = Position.Y };
+        ChildExitingTree += OnLabelExit;
+        PositionOffsetChanged += OnPositionOffsetChange;
+    }
+
+    private void OnPositionOffsetChange()
+    {
+        DataNode!.PosX = Position.X;
+        DataNode!.PosY = Position.Y;
     }
 
     public void AddTransition()
     {
         TransitionLabel newLabel = (TransitionLabel)TransitionLabelPack!.Instantiate();
         AddChild(newLabel);
-        ChildExitingTree += OnLabelExit;
 
         newLabel.SelfIndex = TransitionLabels.Count;
         TransitionLabels.Add(newLabel);

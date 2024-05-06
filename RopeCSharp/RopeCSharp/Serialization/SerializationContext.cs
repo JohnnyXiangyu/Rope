@@ -1,13 +1,14 @@
-﻿using System.Text;
+﻿using Rope.Abstractions.Reflection;
+using System.Text;
 
 namespace RopeCSharp.Serialization;
-public class SerializationContext(Dictionary<string, Type> contextTypes, int indentation = 4)
+public class SerializationContext(Dictionary<string, ContextType> contextTypes, int indentation = 4)
 {
     private int _depth = 0;
     private readonly StringBuilder _builder = new();
 
     public int Indentation { get => indentation; }
-    public Dictionary<string, Type> ContextTypes { get => contextTypes; }
+    public Dictionary<string, ContextType> ContextTypes { get => contextTypes; }
 
     public Scope StartScope(string purpose = "")
     {

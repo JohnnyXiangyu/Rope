@@ -37,6 +37,9 @@ public partial class MainGraphEditor : GraphEdit
     [Signal]
     public delegate void AnnounceMainEditorEventHandler(MainGraphEditor editorItself);
 
+    /// <summary>
+    /// From graph node name to their connections (not action name)
+    /// </summary>
     private readonly Dictionary<string, Dictionary<int, (string, int)>> _knownConnections = [];
 
     /// <summary>
@@ -173,18 +176,41 @@ public partial class MainGraphEditor : GraphEdit
         VerifyGraphNode(fromNode);
         if (_knownConnections[fromNode].TryGetValue((int)fromPort, out var connection))
         {
-            DisconnectNode(fromNode, (int)fromPort, connection.Item1, connection.Item2);
-            _knownConnections[fromNode].Remove((int)fromPort);
+            DisconnectNodeWithRecord(fromNode, (int)fromPort, connection.Item1, connection.Item2);
         }
         ConnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
         _knownConnections[fromNode][(int)fromPort] = (toNode, (int)toPort);
 
         // update model
-        ActionNode actionNodeFrom = GetNode<ActionNode>($"{GetPath()}/{fromNode}");
-        ActionNode actionNodeTo = GetNode<ActionNode>($"{GetPath()}/{toNode}");
+        ActionNode actionNodeFrom = GetNode<ActionNode>($"./{fromNode}");
+        ActionNode actionNodeTo = GetNode<ActionNode>($"./{toNode}");
 
         // NOTE: the logic for *creating* a transition structure is handled in the ActionNode itself, we assume it's created correctly here
         actionNodeFrom.DataNode!.Branches[(int)fromPort] = actionNodeTo.ActionName;
+    }
+
+    private void DisconnectNodeWithRecord(StringName fromNode, long fromPort, StringName toNode, long toPort)
+    {
+        if (!_knownConnections.TryGetValue(fromNode, out var connection) 
+            || !connection.TryGetValue((int)fromPort, out var target)
+            || target.Item1 != toNode
+            || target.Item2 != (int)toPort)
+        {
+            return;
+        }
+
+        GD.Print($"{fromNode}:{fromPort} -x-> {toNode}:{toPort}");
+        VerifyGraphNode(fromNode);
+
+        // disconnect
+        DisconnectNode(fromNode, (int)fromPort, toNode, (int)toPort);
+
+        // update graph data
+        _knownConnections[fromNode].Remove((int)fromPort);
+
+        // update node data
+        ActionNode fromNodeActionNode = GetNode<ActionNode>($"./{fromNode}");
+        fromNodeActionNode.DataNode!.Branches[(int)fromPort] = string.Empty;
     }
 
     public void TryCreateNode()
@@ -202,20 +228,21 @@ public partial class MainGraphEditor : GraphEdit
                 return;
             }
 
-            CreateNodeInternal(actionName);
+            ActionNode newNode = CreateNodeInternal(actionName);
 
             GD.Print($"new action node: {actionName}");
+            Script!.Nodes.Add(newNode.DataNode!);
             popup.QueueFree();
         };
     }
 
-    public void CreateNodeInternal(string actionName, Vector2? initialPosition = null, RopeNode? initialDataNode = null)
+    public ActionNode CreateNodeInternal(string actionName, Vector2? initialPosition = null, RopeNode? initialDataNode = null)
     {
         var newNode = (ActionNode)ActionNodePack!.Instantiate();
-        newNode.DataNode = initialDataNode;
         newNode.ActionName = actionName;
         newNode.PositionOffset = initialPosition ?? Size / 2 + ScrollOffset;
         newNode.SlotRemoved += OnSlotRemovedOnNode;
+        newNode.DataNode = initialDataNode ?? new RopeNode() { Name = actionName, Actions = [], PosX = newNode.Position.X, PosY = newNode.Position.Y };
         AddChild(newNode);
 
         if (initialDataNode?.HasValidTransition == true)
@@ -227,6 +254,7 @@ public partial class MainGraphEditor : GraphEdit
         }
 
         _knownActionNodes.Add(actionName, newNode);
+        return newNode;
     }
 
     private void OnSlotRemovedOnNode(string graphNodeName, int removedSlot)
@@ -252,5 +280,31 @@ public partial class MainGraphEditor : GraphEdit
                 }
             }
         }
+    }
+
+    public void DebugOutputScript()
+    {
+        if (!Visible)
+            return;
+        
+        GD.Print("---- DEBUG OUTPUT: code ----");
+
+        string output = Service.SerializeScript(Script!, Database!.ContextTypes);
+        GD.Print(output);
+
+        GD.Print("---- DEBUG OUTPUT FINISH ----");
+    }
+
+    public void DebugOutputJson()
+    {
+        if (!Visible)
+            return;
+
+        GD.Print("---- DEBUG OUTPUT: json ----");
+
+        string output = JsonSerializer.Serialize(Script);
+        GD.Print(output);
+
+        GD.Print("---- DEBUG OUTPUT FINISH ----");
     }
 }

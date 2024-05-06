@@ -15,11 +15,11 @@ internal static class ScriptExtensions
     public static void Serialize(this RopeScript self, SerializationContext serializationContext)
     {
         // using
-        if (!serializationContext.ContextTypes.TryGetValue(self.Context, out Type? contextType))
+        if (!serializationContext.ContextTypes.TryGetValue(self.Context, out var contextType))
         {
             throw new Exception($"invalid context type {self.Context}");
         }
-        serializationContext.AppendLine($"using {contextType.Namespace};");
+        serializationContext.AppendLine($"using {contextType.ModuleReq};");
         serializationContext.AppendLine("using System.Collections;");
 
         // namespace
@@ -48,11 +48,7 @@ internal static class ScriptExtensions
 
         // run method
         using Scope runMethodScope = serializationContext.StartScope("public IEnumerable Run()");
-        using Scope whileLoopScope = serializationContext.StartScope("while (true)");
-        using (Scope ifScope = serializationContext.StartScope("if (NextState == States.Terminate)"))
-        {
-            serializationContext.AppendLine("break;");
-        }
+        using Scope whileLoopScope = serializationContext.StartScope("while (NextState != States.Terminate)");
         using Scope switchStateScope = serializationContext.StartScope("switch (NextState)");
         foreach (RopeNode node in self.Nodes)
         {

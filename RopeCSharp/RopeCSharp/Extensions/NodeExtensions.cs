@@ -10,6 +10,11 @@ internal static class NodeExtensions
         using Scope methodScope = context.StartScope($"public IEnumerable {self.Name}()");
 
         // process each action
+        if (self.Actions.Length == 0)
+        {
+            context.AppendLine("yield return null;");
+        }
+
         foreach (RopeAction action in self.Actions)
         {
             action.Serialize(context);
