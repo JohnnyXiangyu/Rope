@@ -6,12 +6,15 @@ namespace RopeUI.Scripts.UserInterface.GraphNodes;
 
 public partial class ActionNode : GraphNode, IDataNodeHolder
 {
+    public static int FirstSlotOffset = 2;
+    public static int InSlotOffset = 1;
+
     [Export]
     public PackedScene? TransitionLabelPack;
 
     public string ActionName { get; set; } = string.Empty;
     public string ConditionName { get; set; } = string.Empty;
-    public Rope.Abstractions.Models.ScriptNode? DataNode { get; set; }
+    public Rope.Abstractions.Models.RopeNode? DataNode { get; set; }
 
     public List<TransitionLabel> TransitionLabels { get; private set; } = [];
 
@@ -20,8 +23,9 @@ public partial class ActionNode : GraphNode, IDataNodeHolder
 
     public override void _Ready()
     {
+        base._Ready();
         Title = ActionName;
-        DataNode ??= new() { Actions = [], Name = ActionName, Transition = null, PosX = Position.X, PosY = Position.Y };
+        DataNode ??= new() { Actions = [], Name = ActionName, PosX = Position.X, PosY = Position.Y };
     }
 
     public void AddTransition()
@@ -33,6 +37,12 @@ public partial class ActionNode : GraphNode, IDataNodeHolder
         newLabel.SelfIndex = TransitionLabels.Count;
         TransitionLabels.Add(newLabel);
         SetSlot(TransitionLabels.Count + 1, false, 0, Color.Color8(255, 255, 255), true, 0, Color.Color8(255, 255, 255));
+
+        // update branches to reserve some more slots
+        while (DataNode!.Branches.Count < TransitionLabels.Count)
+        {
+            DataNode!.Branches.Add(string.Empty);
+        }
     }
 
     private void OnLabelExit(Node node)

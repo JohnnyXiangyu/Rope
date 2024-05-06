@@ -6,7 +6,7 @@ internal static class ValueExtensions
 {
     public readonly static HashSet<string> RawPrimTypes = [typeof(int).Name, typeof(long).Name, typeof(bool).Name, typeof(float).Name, typeof(double).Name];
 
-    public static string SerializeAsLiteral(this Value self)
+    public static string SerializeAsLiteral(this RopeValue self)
     {
         if (self.Type == typeof(string).Name)
         {

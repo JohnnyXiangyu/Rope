@@ -7,14 +7,27 @@
       "Name": "Node_1",
       "PosX": 0,
       "PosY": 0,
-      "Transition": null,
+      "Condition": "Choice",
+      "Branches": [
+        "Node_2"
+      ],
       "Actions": []
     },
     {
       "Name": "Node_2",
-      "PosX": 100,
-      "PosY": 100,
-      "Transition": null,
+      "PosX": 300,
+      "PosY": 200,
+      "Actions": []
+    },
+    {
+      "Name": "Node_3",
+      "PosX": 400,
+      "PosY": 300,
+      "Condition": "Choice",
+      "Branches": [
+        "Node_1",
+        "Node_2"
+      ],
       "Actions": []
     }
   ]

@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" path="res://Scripts/Dialogues/NewNodePopup.cs" id="1_6i5lj"]
 
-[node name="NewNodePopup" type="PopupPanel"]
+[node name="NewNodePopup" type="PopupPanel" node_paths=PackedStringArray("ButtonChild", "InputChild")]
 title = "NEW NODE"
 initial_position = 1
 size = Vector2i(470, 90)
 visible = true
 borderless = false
 script = ExtResource("1_6i5lj")
-ButtonPath = NodePath("Control/VBoxContainer/Button")
-InputBoxPath = NodePath("Control/VBoxContainer/TextEdit")
+ButtonChild = NodePath("Control/VBoxContainer/Button")
+InputChild = NodePath("Control/VBoxContainer/TextEdit")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -28,11 +28,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextEdit" type="TextEdit" parent="Control/VBoxContainer"]
+[node name="TextEdit" type="LineEdit" parent="Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 placeholder_text = "NODE NAME HERE"
-scroll_smooth = true
 
 [node name="Button" type="Button" parent="Control/VBoxContainer"]
 layout_mode = 2

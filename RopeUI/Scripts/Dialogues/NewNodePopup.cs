@@ -12,18 +12,10 @@ public partial class NewNodePopup : Node
     public delegate void NodeCreationConfirmEventHandler(string nodeName, NewNodePopup popup);
 
     [Export]
-    public NodePath? ButtonPath { get; set; }
-    private Button? ButtonChild;
+    public Button? ButtonChild { get; set; }
 
     [Export]
-    public NodePath? InputBoxPath { get; set; }
-    private TextEdit? InputChild;
-
-    public override void _Ready()
-    {
-        ButtonChild = (Button)GetNode(ButtonPath);
-        InputChild = (TextEdit)GetNode(InputBoxPath);
-    }
+    public LineEdit? InputChild { get; set; }  
 
     public void OnCancel()
     {

@@ -47,7 +47,7 @@ public partial class PropertyPanel : VBoxContainer
         LabelChild!.Text = GetDescription(nodeToDisplay);
 
         // display all of its existing actions
-        foreach (Rope.Abstractions.Models.ScriptAction action in nodeToDisplay.DataNode!.Actions)
+        foreach (Rope.Abstractions.Models.RopeAction action in nodeToDisplay.DataNode!.Actions)
         {
             ActionItem newAction = (ActionItem)ActionBoxPack!.Instantiate();
             newAction.CurrentContext = _mainEditor.Context;

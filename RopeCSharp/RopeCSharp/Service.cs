@@ -15,19 +15,46 @@ public class Service
     public static DataBase LoadAssembly(Assembly assembly)
     {
         // build a set of supported types
-        HashSet<string> allowedLiteralTypes = [
-            typeof(string).Name,
-            typeof(int).Name,
-            typeof(long).Name,
-            typeof(float).Name,
-            typeof(double).Name,
-            typeof(bool).Name
+        Type[] allowedLiteralTypes = [
+            typeof(string),
+            typeof(int),
+            typeof(long),
+            typeof(float),
+            typeof(double),
+            typeof(bool)
+        ];
+        Type[] allowedArrayTypes = [
+            typeof(string[]),
+            typeof(int[]),
+            typeof(long[]),
+            typeof(float[]),
+            typeof(double[]),
+            typeof(bool[])
         ];
         Dictionary<string, DataConstructor> typeDict = assembly
             .GetTypes()
             .Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ValueTypeAttribute)))
             .Select(t => (t.Name, GetCustomType(t)))
             .ToDictionary();
+        foreach (Type type in allowedLiteralTypes)
+        {
+            typeDict[type.Name] = new DataConstructor()
+            {
+                IsArray = false,
+                Name = type.Name,
+                Params = [GetLiteralType(type)]
+            };
+        }
+        foreach (Type type in allowedArrayTypes)
+        {
+            Type elementType = type.GetElementType() ?? throw new Exception("unexpected array type error");
+            typeDict[type.Name] = new DataConstructor()
+            {
+                IsArray = true,
+                Name = elementType.Name,
+                Params = [GetLiteralType(elementType)]
+            };
+        }
 
         // construct a dictionary of all context information
         Dictionary<string, ContextType> contextDict = assembly
@@ -53,7 +80,7 @@ public class Service
                                     new Parameter()
                                     {
                                         Name = methodParameter.Name,
-                                        DataConstructor = GetDataConstructorForParam(methodParameter, allowedLiteralTypes, typeDict)
+                                        DataConstructor = typeDict[methodParameter.ParameterType.Name]
                                     })
                                 .ToArray()
                         })
@@ -62,6 +89,30 @@ public class Service
             .Select(context => (context.Name, context)).ToDictionary();
 
         return new DataBase() { ContextTypes = contextDict, Constructors = typeDict };
+    }
+
+    private static DataConstructor GetCustomType(Type type)
+    {
+        ConstructorInfo primeCtor;
+        ConstructorInfo[] ctors = type.GetConstructors();
+        if (ctors.Length == 1)
+        {
+            primeCtor = ctors[0];
+        }
+        else
+        {
+            primeCtor = ctors.First(ctor => ctor.CustomAttributes.Any(attr => attr.AttributeType == typeof(GraphConstructorAttribute)));
+        }
+
+        LiteralType[] literalParams = primeCtor.GetParameters().Select(param => GetLiteralType(param.ParameterType)).ToArray();
+        DataConstructor valueType = new()
+        {
+            Name = type.Name,
+            IsArray = false,
+            Params = literalParams
+        };
+
+        return valueType;
     }
 
     private static LiteralType GetLiteralType(Type? type)
@@ -89,67 +140,6 @@ public class Service
         else if (type == typeof(bool))
         {
             return LiteralType.Boolean;
-        }
-        else
-        {
-            throw new UnsupportedTypeException();
-        }
-    }
-
-    private static DataConstructor GetCustomType(Type type)
-    {
-        ConstructorInfo primeCtor;
-        ConstructorInfo[] ctors = type.GetConstructors();
-        if (ctors.Length == 1)
-        {
-            primeCtor = ctors[0];
-        }
-        else
-        {
-            primeCtor = ctors.First(ctor => ctor.CustomAttributes.Any(attr => attr.AttributeType == typeof(GraphConstructorAttribute)));
-        }
-
-        LiteralType[] literalParams = primeCtor.GetParameters().Select(param => GetLiteralType(param.ParameterType)).ToArray();
-        DataConstructor valueType = new()
-        {
-            Name = type.Name,
-            IsArray = false,
-            Params = literalParams
-        };
-
-        return valueType;
-    }
-
-    private static DataConstructor GetArrayType(Type type)
-    {
-        LiteralType baseType = GetLiteralType(type.GetElementType());
-        return new DataConstructor()
-        {
-            Name = type.Name,
-            Params = [baseType],
-            IsArray = true
-        };
-    }
-
-    private static DataConstructor GetDataConstructorForParam(ParameterInfo methodParameter, HashSet<string> allowedLiteralTypes, Dictionary<string, DataConstructor> typeDict)
-    {
-        if (allowedLiteralTypes.Contains(methodParameter.ParameterType.Name))
-        {
-            LiteralType literal = GetLiteralType(methodParameter.ParameterType);
-            return new DataConstructor()
-            {
-                Name = methodParameter.ParameterType.Name,
-                IsArray = false,
-                Params = [literal]
-            };
-        }
-        else if (methodParameter.ParameterType.IsArray)
-        {
-            return GetArrayType(methodParameter.ParameterType);
-        }
-        else if (typeDict.TryGetValue(methodParameter.ParameterType.Name, out DataConstructor? ctype))
-        {
-            return ctype;
         }
         else
         {

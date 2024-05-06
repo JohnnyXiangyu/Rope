@@ -5,14 +5,14 @@ using Rope.Abstractions.Models;
 namespace RopeCSharp.Extensions;
 internal static class ScriptExtensions
 {
-    public static async Task<Script> DeserializeAsync(string path)
+    public static async Task<RopeScript> DeserializeAsync(string path)
     {
         using FileStream scriptFile = File.OpenRead(path);
-        Script script = (await JsonSerializer.DeserializeAsync<Script>(scriptFile).ConfigureAwait(false)) ?? throw new ArgumentException("input path doesn't contain valid script");
+        RopeScript script = (await JsonSerializer.DeserializeAsync<RopeScript>(scriptFile).ConfigureAwait(false)) ?? throw new ArgumentException("input path doesn't contain valid script");
         return script;
     }
 
-    public static void Serialize(this Script self, SerializationContext serializationContext)
+    public static void Serialize(this RopeScript self, SerializationContext serializationContext)
     {
         // using
         if (!serializationContext.ContextTypes.TryGetValue(self.Context, out Type? contextType))
@@ -31,7 +31,7 @@ internal static class ScriptExtensions
         // state management
         using (Scope enumScope = serializationContext.StartScope("public enum States"))
         {
-            foreach (ScriptNode node in self.Nodes)
+            foreach (RopeNode node in self.Nodes)
             {
                 serializationContext.AppendLine($"{node.Name},");
             }
@@ -41,7 +41,7 @@ internal static class ScriptExtensions
         serializationContext.AppendLine($"public States NextState {{ get; private set; }} = States.{self.Nodes[0].Name};");
 
         // nodes as methods
-        foreach (ScriptNode node in self.Nodes)
+        foreach (RopeNode node in self.Nodes)
         {
             node.Serialize(serializationContext);
         }
@@ -54,7 +54,7 @@ internal static class ScriptExtensions
             serializationContext.AppendLine("break;");
         }
         using Scope switchStateScope = serializationContext.StartScope("switch (NextState)");
-        foreach (ScriptNode node in self.Nodes)
+        foreach (RopeNode node in self.Nodes)
         {
             using Scope caseScope = serializationContext.StartScope($"case States.{node.Name}:");
             using (Scope foreachScope = serializationContext.StartScope($"foreach (object? _ in {node.Name}())"))

@@ -57,7 +57,7 @@ public partial class ActionItem : VBoxContainer
             throw new System.Exception("ActionItem is not initialize properly with reference to a packed scene for InputBoxContainer.");
     }
 
-    public void DisplayAction(Rope.Abstractions.Models.ScriptAction data)
+    public void DisplayAction(Rope.Abstractions.Models.RopeAction data)
     {
         if (CurrentContext == null)
         {

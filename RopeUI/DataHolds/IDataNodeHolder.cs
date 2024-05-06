@@ -3,5 +3,5 @@
 namespace RopeUI.DataHolds;
 internal interface IDataNodeHolder
 {
-    ScriptNode? DataNode { get; }
+    RopeNode? DataNode { get; }
 }
