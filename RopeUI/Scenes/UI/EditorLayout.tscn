@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://qvwhlesx07wn"]
 
-[ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Dialogues/NewNodePopup.tscn" id="2_gltt1"]
-[ext_resource type="PackedScene" uid="uid://cjk8jhl1h13ey" path="res://UI/PropertyEditor.tscn" id="2_m3bws"]
-[ext_resource type="PackedScene" uid="uid://migt15npj58k" path="res://UI/GraphNodes/ActionNode.tscn" id="3_i2e26"]
+[ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Scenes/Dialogues/NewNodePopup.tscn" id="2_gltt1"]
+[ext_resource type="PackedScene" uid="uid://cjk8jhl1h13ey" path="res://Scenes/UI/PropertyEditor.tscn" id="2_m3bws"]
+[ext_resource type="PackedScene" uid="uid://migt15npj58k" path="res://Scenes/UI/GraphNodes/ActionNode.tscn" id="3_i2e26"]
 [ext_resource type="Script" path="res://Scripts/UserInterface/MainGraphEditor.cs" id="3_w71ix"]
-[ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
-[ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Dialogues/OpenScriptDialogue.tscn" id="5_ifw41"]
+[ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Scenes/Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
+[ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Scenes/Dialogues/OpenScriptDialogue.tscn" id="5_ifw41"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ishom"]
 bg_color = Color(0.156863, 0.172549, 0.203922, 1)
@@ -41,6 +41,10 @@ layout_mode = 2
 layout_mode = 2
 text = "OPEN SCRIPT"
 
+[node name="SaveScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "SAVE SCRIPT"
+
 [node name="NewNodeButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
 layout_mode = 2
 text = "NEW NODE"
@@ -65,6 +69,7 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 show_zoom_label = true
@@ -82,7 +87,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "PROPERTY EDITOR"
+text = "INSPECTOR"
 horizontal_alignment = 1
 
 [node name="PropertyEditor" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer" instance=ExtResource("2_m3bws")]

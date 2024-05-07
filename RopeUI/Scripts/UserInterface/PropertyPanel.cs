@@ -1,4 +1,6 @@
 using Godot;
+using Rope.Abstractions.Models;
+using RopeUI.Scripts.Dialogues;
 using RopeUI.Scripts.UserInterface.GraphNodes;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +14,9 @@ public partial class PropertyPanel : VBoxContainer
 
     [Export]
     public PackedScene? ActionBoxPack { get; set; } = null;
+
+    [Export]
+    public PackedScene? ActionCreationPack {  get; set; } = null;
 
     [Export]
     public Control[] PerActionChildren { get; set; } = [];
@@ -28,6 +33,8 @@ public partial class PropertyPanel : VBoxContainer
             throw new System.Exception("LabelChild not set prior to instantiation");
         if (ActionBoxPack == null)
             throw new System.Exception("ActionBoxPack not set prior to instantiation");
+        if (ActionCreationPack == null)
+            throw new System.Exception("ActionCreationPack not set prior to instantiation");
 
         foreach (Control control in PerActionChildren)
         {
@@ -42,7 +49,7 @@ public partial class PropertyPanel : VBoxContainer
 
     public void DisplayActionNode(ActionNode nodeToDisplay)
     {
-        foreach (Control child in  PerActionChildren)
+        foreach (Control child in PerActionChildren)
         {
             child.Visible = true;
         }
@@ -60,13 +67,18 @@ public partial class PropertyPanel : VBoxContainer
 
         // display all of its existing actions
         GD.Print(nodeToDisplay.DataNode!.Actions.Count);
-        foreach (Rope.Abstractions.Models.RopeAction action in nodeToDisplay.DataNode!.Actions)
+        foreach (RopeAction action in nodeToDisplay.DataNode!.Actions)
         {
-            ActionItem newAction = (ActionItem)ActionBoxPack!.Instantiate();
-            newAction.CurrentContext = _mainEditor.Context;
-            newAction.DisplayAction(action);
-            AddChild(newAction);
+            AddAction(action);
         }
+    }
+
+    private void AddAction(RopeAction action)
+    {
+        ActionItem newAction = (ActionItem)ActionBoxPack!.Instantiate();
+        newAction.CurrentContext = _mainEditor!.Context;
+        newAction.DisplayAction(action);
+        AddChild(newAction);
     }
 
     public void CancelDisplay(ActionNode nodeToStopDisplay)
@@ -96,5 +108,23 @@ public partial class PropertyPanel : VBoxContainer
         builder.AppendLine("Type: ActionNode");
         builder.AppendLine($"Name: {node.ActionName}");
         return builder.ToString();
+    }
+
+    public void OnAddAction()
+    {
+        var popup = (NewActionPopup)ActionCreationPack!.Instantiate();
+        AddChild(popup);
+        popup.DisplayOptions(_mainEditor!.Context!);
+        popup.ConfirmAction += (_, actionType) =>
+        {
+            RopeAction action = new()
+            {
+                Action = actionType,
+                Values = []
+            };
+            _displayedActionNode!.DataNode!.Actions.Add(action);
+            AddAction(action);
+            popup.QueueFree();
+        };
     }
 }

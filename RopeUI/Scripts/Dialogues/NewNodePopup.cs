@@ -15,7 +15,7 @@ public partial class NewNodePopup : Node
     public Button? ButtonChild { get; set; }
 
     [Export]
-    public LineEdit? InputChild { get; set; }  
+    public LineEdit? InputChild { get; set; }
 
     public void OnCancel()
     {

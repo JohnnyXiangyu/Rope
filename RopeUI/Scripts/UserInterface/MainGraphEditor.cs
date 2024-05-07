@@ -22,7 +22,7 @@ public partial class MainGraphEditor : GraphEdit
     public PackedScene? LoadAssemblyPopupPack;
     [Export]
     public PackedScene? LoadScriptPopupPack;
-    
+
     public DataBase? Database { get; private set; }
     public ContextType? Context { get; private set; }
     public RopeScript? Script { get; set; }
@@ -181,7 +181,7 @@ public partial class MainGraphEditor : GraphEdit
 
     private void DisconnectNodeWithRecord(StringName fromNode, long fromPort, StringName toNode, long toPort)
     {
-        if (!_knownConnections.TryGetValue(fromNode, out var connection) 
+        if (!_knownConnections.TryGetValue(fromNode, out var connection)
             || !connection.TryGetValue((int)fromPort, out var target)
             || target.Item1 != toNode
             || target.Item2 != (int)toPort)
@@ -208,7 +208,7 @@ public partial class MainGraphEditor : GraphEdit
         if (!Visible)
             return;
 
-        var newPopup = (NewNodePopup) NodeCreatePopupPack!.Instantiate();
+        var newPopup = (NewNodePopup)NodeCreatePopupPack!.Instantiate();
         AddSibling(newPopup);
         newPopup.NodeCreationConfirm += (actionName, popup) =>
         {
@@ -282,7 +282,7 @@ public partial class MainGraphEditor : GraphEdit
     {
         if (!Visible)
             return;
-        
+
         GD.Print("---- DEBUG OUTPUT: code ----");
 
         string output = Service.SerializeScript(Script!, Database!.ContextTypes);

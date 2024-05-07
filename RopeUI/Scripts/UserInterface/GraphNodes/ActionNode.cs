@@ -51,7 +51,7 @@ public partial class ActionNode : GraphNode, IDataNodeHolder
 
         // update and rename all child labels
         TransitionLabels.Remove((TransitionLabel)node);
-        for (int i = 0; i <  TransitionLabels.Count; i++)
+        for (int i = 0; i < TransitionLabels.Count; i++)
         {
             TransitionLabels[i].SelfIndex = i;
         }

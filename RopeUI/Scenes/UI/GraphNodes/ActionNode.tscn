@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://migt15npj58k"]
 
 [ext_resource type="Script" path="res://Scripts/UserInterface/GraphNodes/ActionNode.cs" id="1_dyncm"]
-[ext_resource type="PackedScene" uid="uid://bwny07yu8wssf" path="res://UI/GraphNodes/BasicLabel.tscn" id="2_wleie"]
+[ext_resource type="PackedScene" uid="uid://bwny07yu8wssf" path="res://Scenes/UI/GraphNodes/BasicLabel.tscn" id="2_wleie"]
 
 [node name="ActionNode" type="GraphNode"]
 offset_right = 78.0

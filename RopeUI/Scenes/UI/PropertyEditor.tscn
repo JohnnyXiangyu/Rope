@@ -1,13 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjk8jhl1h13ey"]
+[gd_scene load_steps=4 format=3 uid="uid://cjk8jhl1h13ey"]
 
 [ext_resource type="Script" path="res://Scripts/UserInterface/PropertyPanel.cs" id="1_3khnn"]
-[ext_resource type="PackedScene" uid="uid://dc71fy2q4aau2" path="res://UI/GraphNodes/ActionItemInEditor.tscn" id="2_ksvay"]
+[ext_resource type="PackedScene" uid="uid://dc71fy2q4aau2" path="res://Scenes/UI/GraphNodes/ActionItemInEditor.tscn" id="2_ksvay"]
+[ext_resource type="PackedScene" uid="uid://cqktkqas4ogdx" path="res://Scenes/Dialogues/NewActionPopup.tscn" id="3_7u3vr"]
 
 [node name="PropertyEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelChild", "PerActionChildren")]
 theme_override_constants/separation = 5
 script = ExtResource("1_3khnn")
 LabelChild = NodePath("Label")
 ActionBoxPack = ExtResource("2_ksvay")
+ActionCreationPack = ExtResource("3_7u3vr")
 PerActionChildren = [NodePath("Button"), NodePath("Label")]
 
 [node name="Button" type="Button" parent="."]
@@ -18,3 +20,5 @@ text = "NEW ACTION"
 [node name="Label" type="Label" parent="."]
 visible = false
 layout_mode = 2
+
+[connection signal="button_down" from="Button" to="." method="OnAddAction"]
