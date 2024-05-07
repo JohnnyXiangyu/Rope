@@ -4,6 +4,7 @@ using Rope.Abstractions.Reflection;
 using RopeCSharp.Exceptions;
 using RopeCSharp.Extensions;
 using RopeCSharp.Serialization;
+using System.Collections.Immutable;
 using System.Reflection;
 
 namespace RopeCSharp;
@@ -33,38 +34,7 @@ public class Service
             typeof(double),
             typeof(bool)
         ];
-        Type[] allowedArrayTypes = [
-            typeof(string[]),
-            typeof(int[]),
-            typeof(long[]),
-            typeof(float[]),
-            typeof(double[]),
-            typeof(bool[])
-        ];
-        Dictionary<string, DataConstructor> typeDict = assembly
-            .GetTypes()
-            .Where(type => type.CustomAttributes.Any(attr => attr.AttributeType == typeof(ValueTypeAttribute)))
-            .Select(t => (t.Name, GetCustomType(t)))
-            .ToDictionary();
-        foreach (Type type in allowedLiteralTypes)
-        {
-            typeDict[type.Name] = new DataConstructor()
-            {
-                IsArray = false,
-                Name = type.Name,
-                Params = [GetLiteralType(type)]
-            };
-        }
-        foreach (Type type in allowedArrayTypes)
-        {
-            Type elementType = type.GetElementType() ?? throw new Exception("unexpected array type error");
-            typeDict[type.Name] = new DataConstructor()
-            {
-                IsArray = true,
-                Name = elementType.Name,
-                Params = [GetLiteralType(elementType)]
-            };
-        }
+        ImmutableHashSet<Type> allowedLiteralTypeNames = allowedLiteralTypes.ToImmutableHashSet();
 
         // construct a dictionary of all context information
         Dictionary<string, ContextType> contextDict = assembly
@@ -86,43 +56,22 @@ public class Service
                             Name = contextMethod.Name,
                             Params = contextMethod
                                 .GetParameters()
+                                .Where(methodParameter => allowedLiteralTypeNames.Contains(methodParameter.ParameterType))
                                 .Select(methodParameter =>
                                     new Parameter()
                                     {
                                         Name = methodParameter.Name,
-                                        DataConstructor = typeDict[methodParameter.ParameterType.Name]
+                                        Type = GetLiteralType(methodParameter.ParameterType)
                                     })
                                 .ToArray()
                         })
-                    .ToArray()
+                    .Select(action => (action.Name, action))
+                    .ToDictionary()
                 })
-            .Select(context => (context.Name, context)).ToDictionary();
+            .Select(context => (context.Name, context))
+            .ToDictionary();
 
-        return new DataBase() { ContextTypes = contextDict, Constructors = typeDict };
-    }
-
-    private static DataConstructor GetCustomType(Type type)
-    {
-        ConstructorInfo primeCtor;
-        ConstructorInfo[] ctors = type.GetConstructors();
-        if (ctors.Length == 1)
-        {
-            primeCtor = ctors[0];
-        }
-        else
-        {
-            primeCtor = ctors.First(ctor => ctor.CustomAttributes.Any(attr => attr.AttributeType == typeof(GraphConstructorAttribute)));
-        }
-
-        LiteralType[] literalParams = primeCtor.GetParameters().Select(param => GetLiteralType(param.ParameterType)).ToArray();
-        DataConstructor valueType = new()
-        {
-            Name = type.Name,
-            IsArray = false,
-            Params = literalParams
-        };
-
-        return valueType;
+        return new DataBase() { ContextTypes = contextDict };
     }
 
     private static LiteralType GetLiteralType(Type? type)

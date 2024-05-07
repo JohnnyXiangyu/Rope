@@ -10,7 +10,7 @@ internal static class NodeExtensions
         using Scope methodScope = context.StartScope($"public IEnumerable {self.Name}()");
 
         // process each action
-        if (self.Actions.Length == 0)
+        if (self.Actions.Count == 0)
         {
             context.AppendLine("yield return null;");
         }

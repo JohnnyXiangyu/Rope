@@ -1,9 +1,12 @@
-[gd_scene format=3 uid="uid://bqx308xewldyi"]
+[gd_scene load_steps=2 format=3 uid="uid://bqx308xewldyi"]
 
-[node name="StringInput" type="LineEdit"]
+[ext_resource type="Script" path="res://Scripts/UserInterface/PrimitiveInput/InputHasToBeFloat.cs" id="1_rhb8e"]
+
+[node name="FloatInput" type="LineEdit"]
 offset_right = 121.0
 offset_bottom = 37.0
-placeholder_text = "STRING VALUE"
+placeholder_text = "FLOAT VALUE"
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5
+script = ExtResource("1_rhb8e")

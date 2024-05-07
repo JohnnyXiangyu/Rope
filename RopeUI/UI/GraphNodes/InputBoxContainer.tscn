@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://beqj8nofpxo4m"]
+
+[ext_resource type="Script" path="res://Scripts/UserInterface/PrimitiveInput/ParamInput.cs" id="1_eb6k7"]
+
+[node name="InputBoxContainer" type="HBoxContainer" node_paths=PackedStringArray("LabelChild")]
+script = ExtResource("1_eb6k7")
+LabelChild = NodePath("ParamName")
+
+[node name="ParamName" type="Label" parent="."]
+layout_mode = 2

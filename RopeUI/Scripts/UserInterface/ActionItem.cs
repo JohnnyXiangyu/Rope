@@ -1,36 +1,28 @@
 using Godot;
 using Rope.Abstractions.Reflection;
 using RopeUI.Scripts.UserInterface.PrimitiveInput;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RopeUI.Scripts.UserInterface;
 
-public partial class ActionItem : VBoxContainer
+public partial class ActionItem : Node
 {
     [Export]
-    public string StringInputRes { get; set; } = string.Empty;
-    private PackedScene? _stringInputPack;
+    private PackedScene? StringInputPack;
 
     [Export]
-    public string Int32InputRes { get; set; } = string.Empty;
-    private PackedScene? _int32InputPack;
+    private PackedScene? Int32InputPack;
 
     [Export]
-    public string Int64InputRes { get; set; } = string.Empty;
-    private PackedScene? _int64InputPack;
+    private PackedScene? Int64InputPack;
 
     [Export]
-    public string BoolInputRes { get; set; } = string.Empty;
-    private PackedScene? _boolInputPack;
+    private PackedScene? BoolInputPack;
 
     [Export]
-    public string FloatInputRes { get; set; } = string.Empty;
-    private PackedScene? _floatInputPack;
+    private PackedScene? FloatInputPack;
 
     [Export]
-    public string DoubleInputRes { get; set; } = string.Empty;
-    private PackedScene? _doubleInputPack;
+    private PackedScene? DoubleInputPack;
 
     [Export]
     public PackedScene? ParamBoxPack { get; set; } = null;
@@ -42,19 +34,11 @@ public partial class ActionItem : VBoxContainer
 
     public override void _Ready()
     {
-        // load all the input resources
-        _int64InputPack = (PackedScene)GD.Load(Int64InputRes);
-        _boolInputPack = (PackedScene)GD.Load(BoolInputRes);
-        _floatInputPack = (PackedScene)GD.Load(FloatInputRes);
-        _doubleInputPack = (PackedScene)GD.Load(DoubleInputRes);
-        _int32InputPack = (PackedScene)GD.Load(Int32InputRes);
-        _stringInputPack = (PackedScene)GD.Load(StringInputRes);
-
         // get the children references
         if (LabelChild == null)
             throw new System.Exception("ActionItem is not initialized properly with reference to its label child.");
         if (ParamBoxPack == null)
-            throw new System.Exception("ActionItem is not initialize properly with reference to a packed scene for InputBoxContainer.");
+            throw new System.Exception("ActionItem is not initialized properly with reference to a packed scene for InputBoxContainer.");
     }
 
     public void DisplayAction(Rope.Abstractions.Models.RopeAction data)
@@ -65,14 +49,14 @@ public partial class ActionItem : VBoxContainer
             return;
         }
 
-        ContextAction? action = CurrentContext.Actions.Where(a => a.Name == data.Action).FirstOrDefault();
+        ContextAction? action = CurrentContext.Actions[data.Action];
         if (action == null)
         {
             GD.PushError("error: attempting to display action with illegal name");
             return;
         }
 
-        LabelChild!.Text = action.Name;
+        LabelChild!.Text = $"[ACTION] {action.Name}";
 
         // free previously displayed children
         foreach (Node child in GetChildren())
@@ -82,78 +66,129 @@ public partial class ActionItem : VBoxContainer
             child.QueueFree();
         }
 
+        // fix data length mismatches
+        while (action.Params.Length > data.Values.Count)
+        {
+            data.Values.Add(string.Empty);
+        }
+        while (action.Params.Length < data.Values.Count)
+        {
+            data.Values.RemoveAt(data.Values.Count - 1);
+        }
+
+        // fix data format mismatches
+        for (int i = 0; i < action.Params.Length; i++)
+        {
+            try
+            {
+                switch (action.Params[i].Type)
+                {
+                    case LiteralType.Float:
+                        float.Parse(data.Values[i]);
+                        break;
+                    case LiteralType.Double:
+                        double.Parse(data.Values[i]);
+                        break;
+                    case LiteralType.Boolean:
+                        bool.Parse(data.Values[i]);
+                        break;
+                    case LiteralType.Int64:
+                        long.Parse(data.Values[i]);
+                        break;
+                    case LiteralType.Int32:
+                        int.Parse(data.Values[i]);
+                        break;
+                    case LiteralType.String:
+                        continue;
+                }
+            }
+            catch
+            {
+                if (action.Params[i].Type == LiteralType.Boolean)
+                {
+                    data.Values[i] = "true";
+                }
+                else
+                {
+                    data.Values[i] = "0";
+                }
+            }
+        }
+
         // display a new set of children for this action
         for (int i = 0; i < action.Params.Length; i++)
         {
-            Parameter param = action.Params[i];
-            List<Node> inputBoxChildren = [];
-            for (int j = 0; j < param.DataConstructor.Params.Length; j++)
+            // make title card for parameter
+            Parameter paramArchetype = action.Params[i];
+            ParamInput paramBoxChild = (ParamInput)ParamBoxPack!.Instantiate();
+            paramBoxChild.Display(paramArchetype.Name);
+            AddChild(paramBoxChild);
+
+            // make input box for parameter
+            Node inputBoxChild;
+            switch (action.Params[i].Type)
             {
-                LiteralType paramType = param.DataConstructor.Params[j];
-                switch (paramType)
-                {
-                    case LiteralType.String:
-                        {
-                            LineEdit stringBox = (LineEdit)_stringInputPack!.Instantiate();
-                            inputBoxChildren.Add(stringBox);
-                            stringBox.Text = data.Values[i].Params[j];
-                            stringBox.TextChanged += newString => data.Values[i].Params[j] = newString;
-                            break;
-                        }
-                    case LiteralType.Float:
-                        {
-                            InputHasToBeDouble floatBox = (InputHasToBeDouble)_floatInputPack!.Instantiate();
-                            inputBoxChildren.Add(floatBox);
-                            floatBox.Text = data.Values[i].Params[j].ToString();
-                            floatBox.UpdateInput += newFloat => data.Values[i].Params[j] = newFloat.ToString();
-                            break;
-                        }
-                    case LiteralType.Double:
-                        {
-                            InputHasToBeDouble doubleBox = (InputHasToBeDouble)_doubleInputPack!.Instantiate();
-                            inputBoxChildren.Add(doubleBox);
-                            doubleBox.Text = data.Values[i].Params[j].ToString();
-                            doubleBox.UpdateInput += newDouble => data.Values[i].Params[j] = newDouble.ToString();
-                            break;
-                        }
-                    case LiteralType.Boolean:
-                        {
-                            CheckBox boolBox = (CheckBox)_boolInputPack!.Instantiate();
-                            inputBoxChildren.Add(boolBox);
-                            boolBox.ButtonPressed = bool.Parse(data.Values[i].Params[j]);
-                            boolBox.ButtonDown += () => data.Values[i].Params[j] = true.ToString();
-                            boolBox.ButtonUp += () => data.Values[i].Params[j] = false.ToString();
-                            break;
-                        }
-                    case LiteralType.Int64:
-                        {
-                            InputHasToBeInt64 longBox = (InputHasToBeInt64)_int64InputPack!.Instantiate();
-                            inputBoxChildren.Add(longBox);
-                            longBox.Text = data.Values[i].Params[j];
-                            longBox.UpdateInt64 += newInt64 => data.Values[i].Params[j] = newInt64.ToString();
-                            break;
-                        }
-                    case LiteralType.Int32:
-                        {
-                            InputHasToBeInt32 intBox = (InputHasToBeInt32)_int32InputPack!.Instantiate();
-                            inputBoxChildren.Add(intBox);
-                            intBox.Text = data.Values[i].Params[j];
-                            intBox.UpdateInt32Value += newInt32 => data.Values[i].Params[j] = newInt32.ToString();
-                            break;
-                        }
-                    default:
-                        {
-                            throw new System.Exception("unexpected literal type encountered");
-                        }
-                }
+                case LiteralType.Float:
+                    {
+                        int localIndex = i;
+                        var child = (InputHasToBeFloat)FloatInputPack!.Instantiate();
+                        child.Text = data.Values[localIndex];
+                        inputBoxChild = child;
+                        child.UpdateFloatValue += newVal => data.Values[localIndex] = newVal.ToString();
+                    }
+                    break;
+                case LiteralType.Double:
+                    {
+                        int localIndex = i;
+                        var child = (InputHasToBeDouble)DoubleInputPack!.Instantiate();
+                        child.Text = data.Values[localIndex];
+                        inputBoxChild = child;
+                        child.UpdateInput += newVal => data.Values[localIndex] = newVal.ToString();
+                    }
+                    break;
+                case LiteralType.Boolean:
+                    {
+                        int localIndex = i;
+                        var child = (CheckBox)FloatInputPack!.Instantiate();
+                        child.ButtonPressed = bool.Parse(data.Values[localIndex]);
+                        inputBoxChild = child;
+                        child.ButtonDown += () => data.Values[localIndex] = true.ToString();
+                        child.ButtonUp += () => data.Values[localIndex] = false.ToString();
+                    }
+                    break;
+                case LiteralType.Int64:
+                    {
+                        int localIndex = i;
+                        var child = (InputHasToBeInt64)Int64InputPack!.Instantiate();
+                        child.Text = data.Values[localIndex];
+                        inputBoxChild = child;
+                        child.UpdateInt64 += newVal => data.Values[localIndex] = newVal.ToString();
+                    }
+                    break;
+                case LiteralType.Int32:
+                    {
+                        int localIndex = i;
+                        var child = (InputHasToBeInt32)Int32InputPack!.Instantiate();
+                        child.Text = data.Values[localIndex];
+                        inputBoxChild = child;
+                        child.UpdateInt32Value += newVal => data.Values[localIndex] = newVal.ToString();
+                    }
+                    break;
+                case LiteralType.String:
+                    {
+                        int localIndex = i;
+                        var child = (LineEdit)StringInputPack!.Instantiate();
+                        child.Text = data.Values[localIndex];
+                        inputBoxChild = child;
+                        child.TextChanged += newVal => data.Values[localIndex] = newVal;
+                    }
+                    break;
+                default:
+                    throw new System.Exception($"unexpected type: {action.Params[i].Type}");
             }
 
-            ParamInput paramBoxChild = (ParamInput)ParamBoxPack!.Instantiate();
-            paramBoxChild.Ready += () =>
-            {
-                paramBoxChild.Display(param.Name, inputBoxChildren);
-            };
-            AddChild(paramBoxChild);
+            // add the input box to the title
+            paramBoxChild.AddChild(inputBoxChild);
         }
     }
 }

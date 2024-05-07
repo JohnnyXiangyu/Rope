@@ -19,6 +19,7 @@ internal static class ScriptExtensions
         {
             throw new Exception($"invalid context type {self.Context}");
         }
+        serializationContext.SelectedContextType = contextType;
         serializationContext.AppendLine($"using {contextType.ModuleReq};");
         serializationContext.AppendLine("using System.Collections;");
 

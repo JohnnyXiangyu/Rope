@@ -9,6 +9,7 @@ public class SerializationContext(Dictionary<string, ContextType> contextTypes, 
 
     public int Indentation { get => indentation; }
     public Dictionary<string, ContextType> ContextTypes { get => contextTypes; }
+    public ContextType? SelectedContextType { get; set; }
 
     public Scope StartScope(string purpose = "")
     {

@@ -2,5 +2,5 @@
 public class Parameter
 {
     public required string? Name { get; set; }
-    public required DataConstructor DataConstructor { get; set; }
+    public required LiteralType Type { get; set; }
 }

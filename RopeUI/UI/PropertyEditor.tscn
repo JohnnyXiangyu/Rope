@@ -1,12 +1,20 @@
 [gd_scene load_steps=3 format=3 uid="uid://cjk8jhl1h13ey"]
 
 [ext_resource type="Script" path="res://Scripts/UserInterface/PropertyPanel.cs" id="1_3khnn"]
-[ext_resource type="PackedScene" uid="uid://dc71fy2q4aau2" path="res://UI/ActionItemInEditor.tscn" id="2_ksvay"]
+[ext_resource type="PackedScene" uid="uid://dc71fy2q4aau2" path="res://UI/GraphNodes/ActionItemInEditor.tscn" id="2_ksvay"]
 
-[node name="PropertyEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelChild")]
+[node name="PropertyEditor" type="VBoxContainer" node_paths=PackedStringArray("LabelChild", "PerActionChildren")]
+theme_override_constants/separation = 5
 script = ExtResource("1_3khnn")
 LabelChild = NodePath("Label")
 ActionBoxPack = ExtResource("2_ksvay")
+PerActionChildren = [NodePath("Button"), NodePath("Label")]
+
+[node name="Button" type="Button" parent="."]
+visible = false
+layout_mode = 2
+text = "NEW ACTION"
 
 [node name="Label" type="Label" parent="."]
+visible = false
 layout_mode = 2

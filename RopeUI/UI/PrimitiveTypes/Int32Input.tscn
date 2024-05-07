@@ -1,9 +1,12 @@
-[gd_scene format=3 uid="uid://b3sk5cybkfrtb"]
+[gd_scene load_steps=2 format=3 uid="uid://b3sk5cybkfrtb"]
 
-[node name="StringInput" type="LineEdit"]
+[ext_resource type="Script" path="res://Scripts/UserInterface/PrimitiveInput/InputHasToBeInt32.cs" id="1_ay7jj"]
+
+[node name="Int32Input" type="LineEdit"]
 offset_right = 108.0
 offset_bottom = 37.0
 placeholder_text = "INT32 VALUE"
 expand_to_text_length = true
 caret_blink = true
 caret_blink_interval = 0.5
+script = ExtResource("1_ay7jj")

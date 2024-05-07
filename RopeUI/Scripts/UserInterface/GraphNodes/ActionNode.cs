@@ -26,13 +26,6 @@ public partial class ActionNode : GraphNode, IDataNodeHolder
         base._Ready();
         Title = ActionName;
         ChildExitingTree += OnLabelExit;
-        PositionOffsetChanged += OnPositionOffsetChange;
-    }
-
-    private void OnPositionOffsetChange()
-    {
-        DataNode!.PosX = Position.X;
-        DataNode!.PosY = Position.Y;
     }
 
     public void AddTransition()

@@ -7,7 +7,6 @@ using RopeUI.Scripts.UserInterface.GraphNodes;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 
@@ -133,16 +132,7 @@ public partial class MainGraphEditor : GraphEdit
         {
             foreach (RopeAction action in node.Actions)
             {
-                ContextAction actionArchetype = contextData.Actions.Where(a => a.Name == action.Action).First();
-                for (int i = 0; i < actionArchetype.Params.Length; i++)
-                {
-                    RopeValue value = action.Values[i];
-                    if (value.Params.Length != actionArchetype.Params[i].DataConstructor.Params.Length)
-                    {
-                        // reset this value
-                        value.Params = actionArchetype.Params[i].DataConstructor.Params.Select(_ => string.Empty).ToArray();
-                    }
-                }
+                _ = contextData.Actions[action.Action];
             }
         }
     }
@@ -240,10 +230,16 @@ public partial class MainGraphEditor : GraphEdit
     {
         var newNode = (ActionNode)ActionNodePack!.Instantiate();
         newNode.ActionName = actionName;
-        newNode.PositionOffset = initialPosition ?? Size / 2 + ScrollOffset;
+        newNode.PositionOffset = (initialPosition ?? Size / 2 + 2 * ScrollOffset) - ScrollOffset;
         newNode.SlotRemoved += OnSlotRemovedOnNode;
         newNode.DataNode = initialDataNode ?? new RopeNode() { Name = actionName, Actions = [], PosX = newNode.Position.X, PosY = newNode.Position.Y };
         AddChild(newNode);
+
+        newNode.PositionOffsetChanged += () =>
+        {
+            newNode.DataNode.PosX = newNode.PositionOffset.X + ScrollOffset.X;
+            newNode.DataNode.PosY = newNode.PositionOffset.Y + ScrollOffset.Y;
+        };
 
         if (initialDataNode?.HasValidTransition == true)
         {

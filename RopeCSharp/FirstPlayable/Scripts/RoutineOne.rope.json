@@ -1,34 +1,48 @@
 {
   "Context": "IContext",
   "Namespace": "FirstPlayable.Scripts",
-  "Name": "RoutineOne",
   "Nodes": [
     {
       "Name": "Node_1",
-      "PosX": 0,
-      "PosY": 0,
-      "Condition": "Choice",
-      "Branches": [
-        "Node_2"
+      "PosX": 665.31757,
+      "PosY": 177.0152,
+      "Actions": [
+        {
+          "Action": "Dialogue",
+          "Values": [
+            "Person_1",
+            "hello",
+            "says"
+          ]
+        }
       ],
-      "Actions": []
+      "Condition": "Choice",
+      "Branches": [ "Node_2" ]
     },
     {
       "Name": "Node_2",
-      "PosX": 300,
-      "PosY": 200,
-      "Actions": []
+      "PosX": 1045.3176,
+      "PosY": 477.0152,
+      "Actions": [],
+      "Condition": "",
+      "Branches": []
     },
     {
       "Name": "Node_3",
-      "PosX": 400,
-      "PosY": 300,
+      "PosX": 185.99808,
+      "PosY": 347.39346,
+      "Actions": [],
       "Condition": "Choice",
-      "Branches": [
-        "Node_1",
-        "Node_2"
-      ],
-      "Actions": []
+      "Branches": [ "Node_1", "Node_2", "Node_4" ]
+    },
+    {
+      "Name": "Node_4",
+      "PosX": 665.31757,
+      "PosY": 737.0152,
+      "Actions": [],
+      "Condition": "",
+      "Branches": []
     }
-  ]
+  ],
+  "Name": "RoutineOne"
 }

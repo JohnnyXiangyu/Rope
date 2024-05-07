@@ -13,12 +13,14 @@ public partial class PropertyPanel : VBoxContainer
     [Export]
     public PackedScene? ActionBoxPack { get; set; } = null;
 
+    [Export]
+    public Control[] PerActionChildren { get; set; } = [];
+    private readonly HashSet<Node> _persistentChildren = [];
+
     private MainGraphEditor? _mainEditor;
 
     private ActionNode? _displayedActionNode = null;
     private Node? _currentDisplayPanel = null;
-
-    private readonly List<Node> _displayedItems = [];
 
     public override void _Ready()
     {
@@ -26,6 +28,11 @@ public partial class PropertyPanel : VBoxContainer
             throw new System.Exception("LabelChild not set prior to instantiation");
         if (ActionBoxPack == null)
             throw new System.Exception("ActionBoxPack not set prior to instantiation");
+
+        foreach (Control control in PerActionChildren)
+        {
+            _persistentChildren.Add(control);
+        }
     }
 
     public void SetMainEditor(MainGraphEditor editor)
@@ -35,6 +42,11 @@ public partial class PropertyPanel : VBoxContainer
 
     public void DisplayActionNode(ActionNode nodeToDisplay)
     {
+        foreach (Control child in  PerActionChildren)
+        {
+            child.Visible = true;
+        }
+
         if (_mainEditor?.Context == null)
         {
             GD.PushError("trying to display ActionNode details without selecting context type first");
@@ -47,14 +59,13 @@ public partial class PropertyPanel : VBoxContainer
         LabelChild!.Text = GetDescription(nodeToDisplay);
 
         // display all of its existing actions
+        GD.Print(nodeToDisplay.DataNode!.Actions.Count);
         foreach (Rope.Abstractions.Models.RopeAction action in nodeToDisplay.DataNode!.Actions)
         {
             ActionItem newAction = (ActionItem)ActionBoxPack!.Instantiate();
             newAction.CurrentContext = _mainEditor.Context;
-            newAction.Ready += () =>
-            {
-                newAction.DisplayAction(action);
-            };
+            newAction.DisplayAction(action);
+            AddChild(newAction);
         }
     }
 
@@ -63,10 +74,17 @@ public partial class PropertyPanel : VBoxContainer
         if (_displayedActionNode != nodeToStopDisplay)
             return;
 
-        foreach (Node item in _displayedItems)
+        foreach (Control child in PerActionChildren)
         {
-            RemoveChild(item);
-            item.QueueFree();
+            child.Visible = false;
+        }
+
+        foreach (Node child in GetChildren())
+        {
+            if (!_persistentChildren.Contains(child))
+            {
+                child.QueueFree();
+            }
         }
 
         LabelChild!.Text = string.Empty;

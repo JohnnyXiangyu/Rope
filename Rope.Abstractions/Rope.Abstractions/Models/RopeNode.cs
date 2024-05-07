@@ -6,7 +6,7 @@ public class RopeNode
     public required string Name { get; set; }
     public required float PosX { get; set; }
     public required float PosY { get; set; }
-    public required RopeAction[] Actions { get; set; }
+    public required List<RopeAction> Actions { get; set; }
     public string Condition { get; set; } = string.Empty;
     public List<string> Branches { get; set; } = [];
 
