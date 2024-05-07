@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://qvwhlesx07wn"]
+[gd_scene load_steps=9 format=3 uid="uid://qvwhlesx07wn"]
 
 [ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Scenes/Dialogues/NewNodePopup.tscn" id="2_gltt1"]
 [ext_resource type="PackedScene" uid="uid://cjk8jhl1h13ey" path="res://Scenes/UI/PropertyEditor.tscn" id="2_m3bws"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/UserInterface/MainGraphEditor.cs" id="3_w71ix"]
 [ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Scenes/Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
 [ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Scenes/Dialogues/OpenScriptDialogue.tscn" id="5_ifw41"]
+[ext_resource type="PackedScene" uid="uid://v7lk6tacg0cc" path="res://Scenes/Dialogues/NewScriptPopup.tscn" id="6_l2mhn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ishom"]
 bg_color = Color(0.156863, 0.172549, 0.203922, 1)
@@ -36,6 +37,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ishom")
 
 [node name="MenuBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MenuBarPanel"]
 layout_mode = 2
+
+[node name="NewScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "NEW SCRIPT"
 
 [node name="OpenScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
 layout_mode = 2
@@ -78,6 +83,7 @@ NodeCreatePopupPack = ExtResource("2_gltt1")
 ActionNodePack = ExtResource("3_i2e26")
 LoadAssemblyPopupPack = ExtResource("4_misbd")
 LoadScriptPopupPack = ExtResource("5_ifw41")
+NewScriptPopupPack = ExtResource("6_l2mhn")
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight"]
 layout_mode = 2
@@ -93,6 +99,7 @@ horizontal_alignment = 1
 [node name="PropertyEditor" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer" instance=ExtResource("2_m3bws")]
 layout_mode = 2
 
+[connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNewScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/OpenScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="InitiateLoadScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewNodeButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNode"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/DebugScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="DebugOutputScript"]

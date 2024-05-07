@@ -22,6 +22,8 @@ public partial class MainGraphEditor : GraphEdit
     public PackedScene? LoadAssemblyPopupPack;
     [Export]
     public PackedScene? LoadScriptPopupPack;
+    [Export]
+    public PackedScene? NewScriptPopupPack;
 
     public DataBase? Database { get; private set; }
     public ContextType? Context { get; private set; }
@@ -73,38 +75,7 @@ public partial class MainGraphEditor : GraphEdit
                 }
                 SanityCheckScript(Script);
 
-                // load the context type
-                Context = Database.ContextTypes[Script.Context];
-
-                // display all the nodes we have currently
-                foreach (RopeNode scriptNode in Script.Nodes)
-                {
-                    CreateNodeInternal(scriptNode.Name, new Vector2(scriptNode.PosX, scriptNode.PosY), scriptNode);
-                }
-
-                // connect nodes
-                foreach ((string name, ActionNode node) in _knownActionNodes)
-                {
-                    node.Ready += () =>
-                    {
-                        GD.PushError(name);
-                    };
-                    RopeNode? scriptNode = node.DataNode;
-                    if (scriptNode?.HasValidTransition != true)
-                        continue;
-
-                    for (int i = 0; i < scriptNode.Branches.Count; i++)
-                    {
-                        if (_knownActionNodes.TryGetValue(scriptNode.Branches[i], out var targetNode))
-                        {
-                            ConnectNodeWithRecord(node.Name, i, targetNode.Name, 0);
-                        }
-                        else
-                        {
-                            scriptNode.Branches[i] = string.Empty;
-                        }
-                    }
-                }
+                LoadScriptInternal();
 
                 // close popup
                 sender.QueueFree();
@@ -119,6 +90,42 @@ public partial class MainGraphEditor : GraphEdit
             }
         };
         AddSibling(scriptDialogue);
+    }
+
+    private void LoadScriptInternal()
+    {
+        // load the context type
+        Context = Database!.ContextTypes[Script!.Context];
+
+        // display all the nodes we have currently
+        foreach (RopeNode scriptNode in Script.Nodes)
+        {
+            CreateNodeInternal(scriptNode.Name, new Vector2(scriptNode.PosX, scriptNode.PosY), scriptNode);
+        }
+
+        // connect nodes
+        foreach ((string name, ActionNode node) in _knownActionNodes)
+        {
+            node.Ready += () =>
+            {
+                GD.PushError(name);
+            };
+            RopeNode? scriptNode = node.DataNode;
+            if (scriptNode?.HasValidTransition != true)
+                continue;
+
+            for (int i = 0; i < scriptNode.Branches.Count; i++)
+            {
+                if (_knownActionNodes.TryGetValue(scriptNode.Branches[i], out var targetNode))
+                {
+                    ConnectNodeWithRecord(node.Name, i, targetNode.Name, 0);
+                }
+                else
+                {
+                    scriptNode.Branches[i] = string.Empty;
+                }
+            }
+        }
     }
 
     // designed to throw whenever something is wrong
@@ -302,5 +309,26 @@ public partial class MainGraphEditor : GraphEdit
         GD.Print(output);
 
         GD.Print("---- DEBUG OUTPUT FINISH ----");
+    }
+
+    public void TryCreateNewScript()
+    {
+        var popup = (NewScriptPopup)NewScriptPopupPack!.Instantiate();
+        AddChild(popup);
+        popup.DisplayOptions(Database!);
+        popup.NewScriptConfirmed += (_, newName, newNamespace, type) =>
+        {
+            Script = new()
+            {
+                Name = newName,
+                Namespace = newNamespace,
+                Context = type,
+                Nodes = []
+            };
+
+            LoadScriptInternal();
+            popup.QueueFree();
+            Visible = true;
+        };
     }
 }

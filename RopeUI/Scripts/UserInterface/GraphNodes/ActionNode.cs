@@ -1,10 +1,9 @@
 using Godot;
-using RopeUI.DataHolds;
 using System.Collections.Generic;
 
 namespace RopeUI.Scripts.UserInterface.GraphNodes;
 
-public partial class ActionNode : GraphNode, IDataNodeHolder
+public partial class ActionNode : GraphNode
 {
     public static int FirstSlotOffset = 2;
     public static int InSlotOffset = 1;

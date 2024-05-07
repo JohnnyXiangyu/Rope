@@ -4,7 +4,7 @@
 
 [node name="NewActionPopup" type="PopupPanel" node_paths=PackedStringArray("OptionButtonChild")]
 title = "Select Action Typ"
-initial_position = 1
+initial_position = 2
 size = Vector2i(450, 39)
 visible = true
 borderless = false
