@@ -1,36 +1,60 @@
 ﻿using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RopeUI.Scripts.MediatorPattern;
 public partial class DependencyManger : Node
 {
-    private readonly Dictionary<Type, Node> _services = [];
+    private readonly Dictionary<Type, object> _singletonServices = [];
+    private readonly Dictionary<Type, Func<DependencyManger, object>> _scopedServices = [];
 
-    // allow child nodes to opt in
+    private readonly Dictionary<Type, object> _createdScopedServices = [];
+
+    // allow child nodes to opt in and out
     public override void _Ready()
     {
-        foreach (IDependent child in RecursivelyGetDependents())
+        var allDependents = RecursivelyGetDependents().ToArray();
+        foreach (IPlugin child in allDependents)
         {
-            child.Configure(this);
+            child.ConfigureServices(this);
+        }
+        foreach (IPlugin child in allDependents)
+        {
+            child.ContainerSetup(this);
         }
     }
 
-    private IEnumerable<IDependent> RecursivelyGetDependents()
+    public override void _Process(double _)
+    {
+        _createdScopedServices.Clear();
+    }
+
+    private IEnumerable<IPlugin> RecursivelyGetDependents()
     {
         Queue<Node> pendingNodes = new(GetChildren());
         while (pendingNodes.Count > 0)
         {
             Node nextNode = pendingNodes.Dequeue();
-            foreach (Node child in nextNode.GetChildren())
-            {
-                pendingNodes.Enqueue(child);
-            }
 
-            IDependent dependent;
+            // don't get the children of a dependency manager because they are managed by that submanager
             try
             {
-                dependent = (IDependent)nextNode;
+                _ = (DependencyManger)nextNode;
+            }
+            catch
+            {
+                foreach (Node child in nextNode.GetChildren())
+                {
+                    pendingNodes.Enqueue(child);
+                }
+            }
+
+            // grab only nodes implementing IDependent
+            IPlugin dependent;
+            try
+            {
+                dependent = (IPlugin)nextNode;
             }
             catch
             {
@@ -40,25 +64,47 @@ public partial class DependencyManger : Node
         }
     }
 
-    public bool AddSingleton<T>(T instance) where T : Node
+    public bool AddSingleton<T>(T instance) where T : class
     {
-        return _services.TryAdd(typeof(T), instance);
+        return _singletonServices.TryAdd(typeof(T), instance);
     }
 
-    public T? GetSingleton<T>() where T : Node
+    public bool AddScoped<T>(Func<DependencyManger, T> factory) where T : class
     {
-        if (!_services.TryGetValue(typeof(T), out Node? value))
+        return _scopedServices.TryAdd(typeof(T), factory);
+    }
+
+    public T? GetSingleton<T>() where T : class
+    {
+        try
+        {
+            if (!_singletonServices.TryGetValue(typeof(T), out object? value))
+                return null;
+            
+            return (T)value;
+        }
+        catch
         {
             return null;
         }
-        return (T)value;
     }
 
-    public void TryRemoveSingleton<T>(T instance) where T : Node
+    public T? GetScoped<T>() where T : class
     {
-        if (_services.TryGetValue(typeof(T), out Node? value) && (T)value == instance)
+        try
         {
-            _services.Remove(typeof(T));
+            if (_createdScopedServices.TryGetValue(typeof(T), out object? value))
+                return (T)value;
+            
+            if (!_scopedServices.TryGetValue(typeof(T), out Func<DependencyManger, object>? factory))
+                return null;
+
+            _createdScopedServices[typeof(T)] = factory.Invoke(this);
+            return (T)_createdScopedServices[typeof(T)];
+        }
+        catch
+        {
+            return null;
         }
     }
 }

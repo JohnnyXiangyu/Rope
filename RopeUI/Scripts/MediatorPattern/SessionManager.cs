@@ -3,7 +3,7 @@ using Rope.Abstractions.Models;
 using RopeUI.Common;
 
 namespace RopeUI.Scripts.MediatorPattern;
-public partial class SessionManager : Node, IDependent
+public partial class SessionManager : Node, IPlugin
 {
     private DependencyManger? _dependencyManger;
 
@@ -11,7 +11,7 @@ public partial class SessionManager : Node, IDependent
 
     public QuickObservable<RopeScript> ScriptAccouncement { get; set; } = new();
 
-    public void Configure(DependencyManger depdencyManager)
+    public void ConfigureServices(DependencyManger depdencyManager)
     {
         _dependencyManger = depdencyManager;
         if (!depdencyManager.AddSingleton(this))
@@ -20,9 +20,5 @@ public partial class SessionManager : Node, IDependent
         }
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        _dependencyManger?.TryRemoveSingleton(this);
-    }
+    public void ContainerSetup(DependencyManger dependencyManger) { }
 }

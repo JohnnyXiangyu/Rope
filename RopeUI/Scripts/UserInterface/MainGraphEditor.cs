@@ -13,7 +13,7 @@ using System.Text.Json;
 
 namespace RopeUI.Scripts.UserInterface;
 
-public partial class MainGraphEditor : GraphEdit, IDependent
+public partial class MainGraphEditor : GraphEdit, IPlugin
 {
     [Export]
     public PackedScene? NodeCreatePopupPack;
@@ -49,7 +49,7 @@ public partial class MainGraphEditor : GraphEdit, IDependent
     /// </summary>
     private readonly Dictionary<string, ActionNode> _knownActionNodes = [];
 
-    private DependencyManger? _dependencyManager;
+    private SessionManager? _sessionManager;
 
     public override void _Ready()
     {
@@ -60,10 +60,16 @@ public partial class MainGraphEditor : GraphEdit, IDependent
         EmitSignal(SignalName.AnnounceMainEditor, this);
     }
 
-    public void Configure(DependencyManger depdencyManager)
+    public void ConfigureServices(DependencyManger depdencyManager) { }
+
+    public void ContainerSetup(DependencyManger dependencyManger)
     {
-        GD.Print("main graph editor connected to dependency manager");
-        _dependencyManager = depdencyManager;
+        _sessionManager = dependencyManger.GetSingleton<SessionManager>();
+        if (_sessionManager == null)
+        {
+            GD.Print("Main editor failed to acquire needed service: SessionManager. Queuing free.");
+            QueueFree();
+        }
     }
 
     public void InitiateLoadScript()
