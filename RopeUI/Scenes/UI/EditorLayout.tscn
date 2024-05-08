@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://qvwhlesx07wn"]
+[gd_scene load_steps=11 format=3 uid="uid://qvwhlesx07wn"]
 
+[ext_resource type="Script" path="res://Scripts/MediatorPattern/DependencyManger.cs" id="1_q0v1o"]
 [ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Scenes/Dialogues/NewNodePopup.tscn" id="2_gltt1"]
 [ext_resource type="PackedScene" uid="uid://cjk8jhl1h13ey" path="res://Scenes/UI/PropertyEditor.tscn" id="2_m3bws"]
 [ext_resource type="PackedScene" uid="uid://migt15npj58k" path="res://Scenes/UI/GraphNodes/ActionNode.tscn" id="3_i2e26"]
@@ -7,17 +8,19 @@
 [ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Scenes/Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
 [ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Scenes/Dialogues/OpenScriptDialogue.tscn" id="5_ifw41"]
 [ext_resource type="PackedScene" uid="uid://v7lk6tacg0cc" path="res://Scenes/Dialogues/NewScriptPopup.tscn" id="6_l2mhn"]
+[ext_resource type="Script" path="res://Scripts/MediatorPattern/SessionManager.cs" id="9_wgjcb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ishom"]
 bg_color = Color(0.156863, 0.172549, 0.203922, 1)
 
-[node name="EditorLayout" type="Control"]
+[node name="MainWindow" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_q0v1o")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -77,6 +80,7 @@ theme_override_constants/separation = 0
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+scroll_offset = Vector2(-100, 0)
 show_zoom_label = true
 script = ExtResource("3_w71ix")
 NodeCreatePopupPack = ExtResource("2_gltt1")
@@ -86,6 +90,7 @@ LoadScriptPopupPack = ExtResource("5_ifw41")
 NewScriptPopupPack = ExtResource("6_l2mhn")
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer"]
@@ -98,6 +103,9 @@ horizontal_alignment = 1
 
 [node name="PropertyEditor" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer" instance=ExtResource("2_m3bws")]
 layout_mode = 2
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("9_wgjcb")
 
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNewScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/OpenScriptButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="InitiateLoadScript"]

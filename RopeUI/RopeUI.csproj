@@ -7,7 +7,13 @@
 	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="UI\" />
+    <Compile Remove="UI\**" />
+    <EmbeddedResource Remove="UI\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rope.Abstractions\Rope.Abstractions\Rope.Abstractions.csproj" />

@@ -3,6 +3,7 @@ using Rope.Abstractions.Models;
 using Rope.Abstractions.Reflection;
 using RopeCSharp;
 using RopeUI.Scripts.Dialogues;
+using RopeUI.Scripts.MediatorPattern;
 using RopeUI.Scripts.UserInterface.GraphNodes;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Text.Json;
 
 namespace RopeUI.Scripts.UserInterface;
 
-public partial class MainGraphEditor : GraphEdit
+public partial class MainGraphEditor : GraphEdit, IDependent
 {
     [Export]
     public PackedScene? NodeCreatePopupPack;
@@ -48,6 +49,8 @@ public partial class MainGraphEditor : GraphEdit
     /// </summary>
     private readonly Dictionary<string, ActionNode> _knownActionNodes = [];
 
+    private DependencyManger? _dependencyManager;
+
     public override void _Ready()
     {
         ConnectionRequest += ConnectNodeWithRecord;
@@ -55,6 +58,12 @@ public partial class MainGraphEditor : GraphEdit
         NodeDeselected += NodeDeselectedDispatch;
         Database = Service.LoadAssembly(Assembly.GetAssembly(AssemblyConfigs.AssemblyEntry) ?? throw new Exception("unable to load client assembly"));
         EmitSignal(SignalName.AnnounceMainEditor, this);
+    }
+
+    public void Configure(DependencyManger depdencyManager)
+    {
+        GD.Print("main graph editor connected to dependency manager");
+        _dependencyManager = depdencyManager;
     }
 
     public void InitiateLoadScript()
