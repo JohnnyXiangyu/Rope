@@ -10,7 +10,7 @@ using System.Reflection;
 namespace RopeCSharp;
 public class Service
 {
-    public static string SerializeScript(RopeScript script, Dictionary<string, ContextType> contextTypes)
+    public static string SerializeCode(RopeScript script, Dictionary<string, ContextType> contextTypes)
     {
         SerializationContext serializationContext = new(contextTypes);
         script.Serialize(serializationContext);

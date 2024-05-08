@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace RopeUI.Scripts.MediatorPattern;
-public partial class DependencyManger : Node
+public partial class DependencyManger : Node, IStopPluginSearch
 {
     private readonly Dictionary<Type, object> _singletonServices = [];
     private readonly Dictionary<Type, Func<DependencyManger, object>> _scopedServices = [];
@@ -37,10 +37,10 @@ public partial class DependencyManger : Node
         {
             Node nextNode = pendingNodes.Dequeue();
 
-            // don't get the children of a dependency manager because they are managed by that submanager
+            // don't get the children of a search stopper
             try
             {
-                _ = (DependencyManger)nextNode;
+                _ = (IStopPluginSearch)nextNode;
             }
             catch
             {
