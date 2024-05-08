@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://qvwhlesx07wn"]
+[gd_scene load_steps=11 format=3 uid="uid://qvwhlesx07wn"]
 
 [ext_resource type="Script" path="res://Scripts/MediatorPattern/DependencyManger.cs" id="1_q0v1o"]
 [ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Scenes/Dialogues/NewNodePopup.tscn" id="2_gltt1"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/UserInterface/MainGraphEditor.cs" id="3_w71ix"]
 [ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Scenes/Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
 [ext_resource type="PackedScene" uid="uid://v7lk6tacg0cc" path="res://Scenes/Dialogues/NewScriptPopup.tscn" id="6_l2mhn"]
+[ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Scenes/Dialogues/OpenScriptDialogue.tscn" id="8_kby15"]
 [ext_resource type="Script" path="res://Scripts/MediatorPattern/SessionManager.cs" id="9_wgjcb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ishom"]
@@ -78,7 +79,6 @@ theme_override_constants/separation = 0
 [node name="GraphEdit" type="GraphEdit" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight"]
 layout_mode = 2
 size_flags_horizontal = 3
-scroll_offset = Vector2(-100, 0)
 show_zoom_label = true
 script = ExtResource("3_w71ix")
 NodeCreatePopupPack = ExtResource("2_gltt1")
@@ -102,13 +102,9 @@ layout_mode = 2
 
 [node name="SessionManager" type="Node" parent="."]
 script = ExtResource("9_wgjcb")
-LoadScriptPopupPack = ExtResource("4_misbd")
+LoadScriptPopupPack = ExtResource("8_kby15")
 NewScriptPopupPack = ExtResource("6_l2mhn")
 
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewScriptButton" to="SessionManager" method="TryCreateNewScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/OpenScriptButton" to="SessionManager" method="InitiateLoadScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewNodeButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNode"]
-[connection signal="ActionNodeDeleted" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="CancelDisplay"]
-[connection signal="ActionNodeDeselected" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="CancelDisplay"]
-[connection signal="ActionNodeSelected" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="DisplayActionNode"]
-[connection signal="AnnounceMainEditor" from="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/PanelContainer/VBoxContainer/PropertyEditor" method="SetMainEditor"]

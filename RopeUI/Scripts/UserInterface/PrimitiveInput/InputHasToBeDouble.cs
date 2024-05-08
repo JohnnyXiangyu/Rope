@@ -16,10 +16,17 @@ public partial class InputHasToBeDouble : LineEdit
 
     private void OnTextChange(string newText)
     {
+        if (newText == string.Empty)
+        {
+            EmitSignal(SignalName.UpdateInput, 0);
+            _oldString = string.Empty;
+            return;
+        }
+
         try
         {
+            EmitSignal(SignalName.UpdateInput, double.Parse(newText));
             _oldString = newText;
-            EmitSignal(SignalName.UpdateInput, double.Parse(_oldString));
         }
         catch
         {

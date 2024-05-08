@@ -1,13 +1,15 @@
 using Godot;
 using Rope.Abstractions.Models;
 using RopeUI.Scripts.Dialogues;
+using RopeUI.Scripts.MediatorPattern;
 using RopeUI.Scripts.UserInterface.GraphNodes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RopeUI.Scripts.UserInterface;
 
-public partial class PropertyPanel : VBoxContainer
+public partial class PropertyPanel : VBoxContainer, IPlugin
 {
     [Export]
     public Label? LabelChild { get; set; } = null;
@@ -27,6 +29,8 @@ public partial class PropertyPanel : VBoxContainer
     private ActionNode? _displayedActionNode = null;
     private Node? _currentDisplayPanel = null;
 
+    private readonly List<IDisposable> _subscriptions = [];
+
     public override void _Ready()
     {
         if (LabelChild == null)
@@ -42,13 +46,11 @@ public partial class PropertyPanel : VBoxContainer
         }
     }
 
-    public void SetMainEditor(MainGraphEditor editor)
+    public void DisplayActionNode(ActionNode? nodeToDisplay)
     {
-        _mainEditor = editor;
-    }
+        if (nodeToDisplay == null)
+            return;
 
-    public void DisplayActionNode(ActionNode nodeToDisplay)
-    {
         foreach (Control child in PerActionChildren)
         {
             child.Visible = true;
@@ -81,7 +83,7 @@ public partial class PropertyPanel : VBoxContainer
         AddChild(newAction);
     }
 
-    public void CancelDisplay(ActionNode nodeToStopDisplay)
+    public void CancelDisplay(ActionNode? nodeToStopDisplay)
     {
         if (_displayedActionNode != nodeToStopDisplay)
             return;
@@ -126,5 +128,30 @@ public partial class PropertyPanel : VBoxContainer
             AddAction(action);
             popup.QueueFree();
         };
+    }
+
+    public void ConfigureServices(DependencyManger depdencyManager) { }
+
+    public void ContainerSetup(DependencyManger dependencyManger)
+    {
+        _mainEditor = dependencyManger.GetSingleton<MainGraphEditor>();
+        if (_mainEditor == null)
+        {
+            GD.PushError($"property panel: required service MainGraphEditor not found");
+            QueueFree();
+            return;
+        }
+
+        _subscriptions.Add(_mainEditor.ActionNodeSelectionEvent.Subscribe(DisplayActionNode));
+        _subscriptions.Add(_mainEditor.ActionNodeDeselectionEvent.Subscribe(CancelDisplay));
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        foreach (IDisposable sub in _subscriptions)
+        {
+            sub.Dispose();
+        }
     }
 }

@@ -6,6 +6,7 @@ using RopeUI.Scripts.MediatorPattern;
 using RopeUI.Scripts.UserInterface.GraphNodes;
 using System;
 using System.Collections.Generic;
+using System.Reactive.Subjects;
 
 namespace RopeUI.Scripts.UserInterface;
 
@@ -20,14 +21,8 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
 
     public ContextType? Context { get; private set; }
 
-    [Signal]
-    public delegate void ActionNodeSelectedEventHandler(ActionNode node);
-    [Signal]
-    public delegate void ActionNodeDeletedEventHandler(ActionNode node);
-    [Signal]
-    public delegate void ActionNodeDeselectedEventHandler(ActionNode node);
-    [Signal]
-    public delegate void AnnounceMainEditorEventHandler(MainGraphEditor editorItself);
+    public BehaviorSubject<ActionNode?> ActionNodeSelectionEvent { get; private set; } = new(null);
+    public BehaviorSubject<ActionNode?> ActionNodeDeselectionEvent { get; private set; } = new(null);
 
     /// <summary>
     /// From graph node name to their connections (not action name)
@@ -43,12 +38,6 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
 
     private readonly List<IDisposable> _subscriptions = [];
 
-    public override void _Ready()
-    {
-        
-        EmitSignal(SignalName.AnnounceMainEditor, this);
-    }
-
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
@@ -58,7 +47,15 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
         }
     }
 
-    public void ConfigureServices(DependencyManger depdencyManager) { }
+    public void ConfigureServices(DependencyManger dependencyManager)
+    {
+        if (!dependencyManager.AddSingleton(this))
+        {
+            GD.Print("Main editor failed to register self as singleton. Queuing free.");
+            QueueFree();
+            return;
+        }
+    }
 
     public void ContainerSetup(DependencyManger dependencyManger)
     {
@@ -74,8 +71,15 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
         // subscribe to session manager events
         _subscriptions.Add(_sessionManager.ScriptAccouncement.Subscribe(newScript =>
         {
-            GD.Print("main graph editor: load new script");
-            LoadScriptInternal(newScript);
+            if (newScript == null)
+            {
+                GD.Print($"main graph editor: unload script");
+                UnloadScript();
+                return;
+            }
+
+            GD.Print($"main graph editor: load new script {newScript.Name}");
+            LoadScript(newScript);
         }));
 
         // hook self into the session manager
@@ -84,7 +88,20 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
         NodeDeselected += NodeDeselectedDispatch;
     }
 
-    private void LoadScriptInternal(RopeScript script)
+    private void UnloadScript()
+    {
+        ClearConnections();
+        foreach (Node child in GetChildren())
+        {
+            try
+            {
+                ((GraphNode)child).QueueFree();
+            }
+            catch { }
+        }
+    }
+
+    private void LoadScript(RopeScript script)
     {
         // find the context
         Context = _sessionManager!.Database!.ContextTypes[script.Context];
@@ -124,7 +141,7 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
     {
         try
         {
-            EmitSignal(SignalName.ActionNodeDeselected, (ActionNode)node);
+            ActionNodeDeselectionEvent.OnNext((ActionNode)node);
         }
         catch { }
     }
@@ -133,7 +150,7 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
     {
         try
         {
-            EmitSignal(SignalName.ActionNodeSelected, (ActionNode)node);
+            ActionNodeSelectionEvent.OnNext((ActionNode)node);
         }
         catch { }
     }

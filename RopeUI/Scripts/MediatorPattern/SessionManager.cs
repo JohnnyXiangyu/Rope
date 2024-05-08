@@ -2,10 +2,10 @@
 using Rope.Abstractions.Models;
 using Rope.Abstractions.Reflection;
 using RopeCSharp;
-using RopeUI.Common;
 using RopeUI.Scripts.Dialogues;
 using System;
 using System.IO;
+using System.Reactive.Subjects;
 using System.Reflection;
 using System.Text.Json;
 
@@ -19,15 +19,14 @@ public partial class SessionManager : Node, IPlugin
 
     private DependencyManger? _dependencyManger;
 
-    public DataBase? Database { get; private set; }
+    public DataBase Database { get; private set; } = Service.LoadAssembly(Assembly.GetAssembly(AssemblyConfigs.AssemblyEntry)!);
     public RopeScript? Script { get; private set; }
 
-    public QuickObservable<RopeScript> ScriptAccouncement { get; private set; } = new();
-    public QuickObservable<RopeAction> ActionSelectio { get; private set; } = new();
+    public BehaviorSubject<RopeScript?> ScriptAccouncement { get; private set; } = new(null);
+    public BehaviorSubject<RopeAction?> ActionSelectio { get; private set; } = new(null);
 
     public void ConfigureServices(DependencyManger depdencyManager)
     {
-        Database = Service.LoadAssembly(Assembly.GetAssembly(AssemblyConfigs.AssemblyEntry)!);
         if (Database == null)
         {
             GD.PushError("Session manager failed to load reflection database");
@@ -62,9 +61,12 @@ public partial class SessionManager : Node, IPlugin
             Script = JsonSerializer.Deserialize<RopeScript>(scriptFile);
 
             // safety check
-            if (Script == null || !SanityCheckScript(Script) || !ScriptAccouncement.BroadCast(Script))
+            if (Script == null || !SanityCheckScript(Script))
                 throw new Exception();
 
+            // broadcast
+            ScriptAccouncement.OnNext(Script);
+            
             // close popup
             sender.QueueFree();
         }
@@ -112,10 +114,8 @@ public partial class SessionManager : Node, IPlugin
             Nodes = []
         };
 
-        if (ScriptAccouncement.BroadCast(Script))
-        {
-            sender.QueueFree();
-        }
+        ScriptAccouncement.OnNext(Script);
+        sender.QueueFree();
     }
 
     public string SerializeCode()

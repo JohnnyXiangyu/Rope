@@ -16,10 +16,17 @@ public partial class InputHasToBeFloat : LineEdit
 
     private void OnTextChange(string newText)
     {
+        if (newText == string.Empty)
+        {
+            EmitSignal(SignalName.UpdateFloatValue, 0);
+            _oldString = string.Empty;
+            return;
+        }
+
         try
         {
+            EmitSignal(SignalName.UpdateFloatValue, float.Parse(newText));
             _oldString = newText;
-            EmitSignal(SignalName.UpdateFloatValue, float.Parse(_oldString));
         }
         catch
         {

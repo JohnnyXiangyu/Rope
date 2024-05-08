@@ -16,10 +16,17 @@ public partial class InputHasToBeInt32 : LineEdit
 
     private void OnTextChange(string newText)
     {
+        if (newText == string.Empty)
+        {
+            EmitSignal(SignalName.UpdateInt32Value, 0);
+            _oldString = string.Empty;
+            return;
+        }
+
         try
         {
+            EmitSignal(SignalName.UpdateInt32Value, int.Parse(newText));
             _oldString = newText;
-            EmitSignal(SignalName.UpdateInt32Value, int.Parse(_oldString));
         }
         catch
         {
