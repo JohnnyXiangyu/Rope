@@ -1,11 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://qvwhlesx07wn"]
+[gd_scene load_steps=10 format=3 uid="uid://qvwhlesx07wn"]
 
 [ext_resource type="Script" path="res://Scripts/MediatorPattern/DependencyManger.cs" id="1_q0v1o"]
 [ext_resource type="PackedScene" uid="uid://v4ic45k211q" path="res://Scenes/Dialogues/NewNodePopup.tscn" id="2_gltt1"]
 [ext_resource type="PackedScene" uid="uid://cjk8jhl1h13ey" path="res://Scenes/UI/PropertyEditor.tscn" id="2_m3bws"]
 [ext_resource type="PackedScene" uid="uid://migt15npj58k" path="res://Scenes/UI/GraphNodes/ActionNode.tscn" id="3_i2e26"]
 [ext_resource type="Script" path="res://Scripts/UserInterface/MainGraphEditor.cs" id="3_w71ix"]
-[ext_resource type="PackedScene" uid="uid://byipj0fccmfyj" path="res://Scenes/Dialogues/OpenAssemblyDialogue.tscn" id="4_misbd"]
 [ext_resource type="PackedScene" uid="uid://v7lk6tacg0cc" path="res://Scenes/Dialogues/NewScriptPopup.tscn" id="6_l2mhn"]
 [ext_resource type="PackedScene" uid="uid://cyl8jnf8fa73" path="res://Scenes/Dialogues/OpenScriptDialogue.tscn" id="8_kby15"]
 [ext_resource type="Script" path="res://Scripts/MediatorPattern/SessionManager.cs" id="9_wgjcb"]
@@ -49,6 +48,10 @@ text = "NEW SCRIPT"
 layout_mode = 2
 text = "OPEN SCRIPT"
 
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
+layout_mode = 2
+text = "CLOSE SCRIPT"
+
 [node name="SaveScriptButton" type="Button" parent="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar"]
 layout_mode = 2
 text = "SAVE SCRIPT"
@@ -83,7 +86,6 @@ show_zoom_label = true
 script = ExtResource("3_w71ix")
 NodeCreatePopupPack = ExtResource("2_gltt1")
 ActionNodePack = ExtResource("3_i2e26")
-LoadAssemblyPopupPack = ExtResource("4_misbd")
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight"]
 custom_minimum_size = Vector2(200, 0)
@@ -107,4 +109,5 @@ NewScriptPopupPack = ExtResource("6_l2mhn")
 
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewScriptButton" to="SessionManager" method="TryCreateNewScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/OpenScriptButton" to="SessionManager" method="InitiateLoadScript"]
+[connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/Button" to="SessionManager" method="TryCloseScript"]
 [connection signal="button_down" from="MarginContainer/VBoxContainer/MenuBarPanel/MenuBar/NewNodeButton" to="MarginContainer/VBoxContainer/MainPanel/PanelContainer/SplitRight/GraphEdit" method="TryCreateNode"]

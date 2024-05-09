@@ -16,8 +16,6 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
     public PackedScene? NodeCreatePopupPack;
     [Export]
     public PackedScene? ActionNodePack;
-    [Export]
-    public PackedScene? LoadAssemblyPopupPack;
 
     public ContextType? Context { get; private set; }
 
@@ -99,6 +97,8 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
             }
             catch { }
         }
+        _knownActionNodes.Clear();
+        _knownConnections.Clear();
     }
 
     private void LoadScript(RopeScript script)
@@ -206,7 +206,7 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
 
     public void TryCreateNode()
     {
-        if (!Visible)
+        if (_sessionManager?.ScriptAccouncement?.Value == null)
             return;
 
         var newPopup = (NewNodePopup)NodeCreatePopupPack!.Instantiate();
@@ -222,7 +222,7 @@ public partial class MainGraphEditor : GraphEdit, IPlugin
             ActionNode newNode = CreateNodeInternal(actionName);
 
             GD.Print($"new action node: {actionName}");
-            _sessionManager!.Script!.Nodes.Add(newNode.DataNode!);
+            _sessionManager.ScriptAccouncement.Value.Nodes.Add(newNode.DataNode!);
             popup.QueueFree();
         };
     }

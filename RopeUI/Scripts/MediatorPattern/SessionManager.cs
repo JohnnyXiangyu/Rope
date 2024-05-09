@@ -20,7 +20,6 @@ public partial class SessionManager : Node, IPlugin
     private DependencyManger? _dependencyManger;
 
     public DataBase Database { get; private set; } = Service.LoadAssembly(Assembly.GetAssembly(AssemblyConfigs.AssemblyEntry)!);
-    public RopeScript? Script { get; private set; }
 
     public BehaviorSubject<RopeScript?> ScriptAccouncement { get; private set; } = new(null);
     public BehaviorSubject<RopeAction?> ActionSelectio { get; private set; } = new(null);
@@ -44,7 +43,7 @@ public partial class SessionManager : Node, IPlugin
 
     public void InitiateLoadScript()
     {
-        if (Database == null || Script != null)
+        if (Database == null || ScriptAccouncement.Value != null)
             return;
 
         OpenFileDialog scriptDialogue = (OpenFileDialog)LoadScriptPopupPack!.Instantiate();
@@ -58,14 +57,14 @@ public partial class SessionManager : Node, IPlugin
         {
             // load script
             using FileStream scriptFile = File.Open(path, FileMode.Open, System.IO.FileAccess.Read, FileShare.Read);
-            Script = JsonSerializer.Deserialize<RopeScript>(scriptFile);
+            RopeScript? newScript = JsonSerializer.Deserialize<RopeScript>(scriptFile);
 
             // safety check
-            if (Script == null || !SanityCheckScript(Script))
+            if (newScript == null || !SanityCheckScript(newScript))
                 throw new Exception();
 
             // broadcast
-            ScriptAccouncement.OnNext(Script);
+            ScriptAccouncement.OnNext(newScript);
             
             // close popup
             sender.QueueFree();
@@ -73,7 +72,6 @@ public partial class SessionManager : Node, IPlugin
         catch (Exception e)
         {
             GD.PrintErr($"unable to load script from {path}: {e}");
-            Script = null;
         }
     }
 
@@ -106,7 +104,7 @@ public partial class SessionManager : Node, IPlugin
 
     private void OnConfirmNewScript(Node sender, string newName, string newNamespace, string type)
     {
-        Script = new()
+        RopeScript script = new()
         {
             Name = newName,
             Namespace = newNamespace,
@@ -114,25 +112,30 @@ public partial class SessionManager : Node, IPlugin
             Nodes = []
         };
 
-        ScriptAccouncement.OnNext(Script);
+        ScriptAccouncement.OnNext(script);
         sender.QueueFree();
+    }
+
+    public void TryCloseScript()
+    {
+        ScriptAccouncement.OnNext(null);
     }
 
     public string SerializeCode()
     {
-        if (Script == null || Database == null)
+        if (ScriptAccouncement.Value == null || Database == null)
             return string.Empty;
 
-        string output = Service.SerializeCode(Script, Database.ContextTypes);
+        string output = Service.SerializeCode(ScriptAccouncement.Value, Database.ContextTypes);
         return output;
     }
 
     public string SerializeJson()
     {
-        if (Script == null)
+        if (ScriptAccouncement.Value == null)
             return string.Empty;
 
-        string output = JsonSerializer.Serialize(Script);
+        string output = JsonSerializer.Serialize(ScriptAccouncement.Value);
         return output;
     }
 }

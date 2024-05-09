@@ -6,9 +6,11 @@ using System.Linq;
 namespace RopeUI.Scripts.MediatorPattern;
 public partial class DependencyManger : Node, IStopPluginSearch
 {
+    // runtime not modifiable
     private readonly Dictionary<Type, object> _singletonServices = [];
     private readonly Dictionary<Type, Func<DependencyManger, object>> _scopedServices = [];
 
+    // runtime modifiable
     private readonly Dictionary<Type, object> _createdScopedServices = [];
 
     // allow child nodes to opt in and out

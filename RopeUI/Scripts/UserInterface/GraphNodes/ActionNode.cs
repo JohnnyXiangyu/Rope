@@ -45,17 +45,21 @@ public partial class ActionNode : GraphNode
 
     private void OnLabelExit(Node node)
     {
-        // figure out which node exited
-        int index = TransitionLabels.IndexOf((TransitionLabel)node);
-
-        // update and rename all child labels
-        TransitionLabels.Remove((TransitionLabel)node);
-        for (int i = 0; i < TransitionLabels.Count; i++)
+        try
         {
-            TransitionLabels[i].SelfIndex = i;
-        }
+            // figure out which node exited
+            int index = TransitionLabels.IndexOf((TransitionLabel)node);
 
-        // signal
-        EmitSignal(SignalName.SlotRemoved, Name, index);
+            // update and rename all child labels
+            TransitionLabels.Remove((TransitionLabel)node);
+            for (int i = 0; i < TransitionLabels.Count; i++)
+            {
+                TransitionLabels[i].SelfIndex = i;
+            }
+
+            // signal
+            EmitSignal(SignalName.SlotRemoved, Name, index);
+        }
+        catch { }
     }
 }

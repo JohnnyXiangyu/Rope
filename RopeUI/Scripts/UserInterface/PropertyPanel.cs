@@ -13,32 +13,30 @@ public partial class PropertyPanel : VBoxContainer, IPlugin
 {
     [Export]
     public Label? LabelChild { get; set; } = null;
-
     [Export]
     public PackedScene? ActionBoxPack { get; set; } = null;
-
     [Export]
     public PackedScene? ActionCreationPack {  get; set; } = null;
-
     [Export]
     public Control[] PerActionChildren { get; set; } = [];
     private readonly HashSet<Node> _persistentChildren = [];
 
+    // services
     private MainGraphEditor? _mainEditor;
+    private readonly List<IDisposable> _subscriptions = [];
 
+    // runtime mutables
     private ActionNode? _displayedActionNode = null;
     private Node? _currentDisplayPanel = null;
-
-    private readonly List<IDisposable> _subscriptions = [];
 
     public override void _Ready()
     {
         if (LabelChild == null)
-            throw new System.Exception("LabelChild not set prior to instantiation");
+            throw new Exception("LabelChild not set prior to instantiation");
         if (ActionBoxPack == null)
-            throw new System.Exception("ActionBoxPack not set prior to instantiation");
+            throw new Exception("ActionBoxPack not set prior to instantiation");
         if (ActionCreationPack == null)
-            throw new System.Exception("ActionCreationPack not set prior to instantiation");
+            throw new Exception("ActionCreationPack not set prior to instantiation");
 
         foreach (Control control in PerActionChildren)
         {
@@ -68,7 +66,6 @@ public partial class PropertyPanel : VBoxContainer, IPlugin
         LabelChild!.Text = GetDescription(nodeToDisplay);
 
         // display all of its existing actions
-        GD.Print(nodeToDisplay.DataNode!.Actions.Count);
         foreach (RopeAction action in nodeToDisplay.DataNode!.Actions)
         {
             AddAction(action);
